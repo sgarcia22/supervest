@@ -34,7 +34,15 @@
       @click="createStream()"
       class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
     >
-      Create MATIC stream
+      Create MATICx stream
+    </button>
+
+    <button
+      type="button"
+      @click="updateStream()"
+      class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+    >
+      Update MATICx stream
     </button>
 
     <!-- grid wrapper card -->
@@ -539,7 +547,7 @@
 <script>
   // @ is an alias to /src
   import { Icon } from "@iconify/vue";
-  import { createNewFlow } from "../utils/superfluid";
+  import { createNewFlow, updateExistingFlow } from "../utils/superfluid";
 
   export default {
     name: "Dashboard",
@@ -547,6 +555,10 @@
       async createStream() {
         const walletAddress = "0x1dCF1Ec2ED51A4ffd1b3435a5d5A2EEdf1A9441A";
         createNewFlow(walletAddress, 20000000000);
+      },
+      async updateStream() {
+        const walletAddress = "0x1dCF1Ec2ED51A4ffd1b3435a5d5A2EEdf1A9441A";
+        updateExistingFlow(walletAddress, 10000000000);
       }
     },
     data() {

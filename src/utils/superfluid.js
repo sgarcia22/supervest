@@ -2,26 +2,32 @@ import { customHttpProvider } from "./config";
 import { Framework } from "@superfluid-finance/sdk-core";
 import { ethers } from "ethers";
 
+const NETWORK_NAME = "mumbai";
+const SUPER_TOKEN_NAME = "MATICx";
+const SENDER_ADDR = "0xDCB45e4f6762C3D7C61a00e96Fb94ADb7Cf27721";
+// This is not my private key, it is a test one
+const PRIVATE_KEY = "0xd2ebfb1517ee73c4bd3d209530a7e1c25352542843077109ae77a2c0213375f1";
+
 export async function createNewFlow(recipient, flowRate) {
     const sf = await Framework.create({
-    networkName: "mumbai",
+    networkName: NETWORK_NAME,
     provider: customHttpProvider
     });
 
     const signer = sf.createSigner({
     privateKey:
-        "0xd2ebfb1517ee73c4bd3d209530a7e1c25352542843077109ae77a2c0213375f1",
+        PRIVATE_KEY,
     provider: customHttpProvider
     });
 
-    const MATICxContract = await sf.loadSuperToken("MATICx");
-    const MATICx = MATICxContract.address;
+    const tokenxContract = await sf.loadSuperToken(SUPER_TOKEN_NAME);
+    const tokenx = tokenxContract.address;
 
     try {
     const createFlowOperation = sf.cfaV1.createFlow({
         flowRate: flowRate,
         receiver: recipient,
-        superToken: MATICx
+        superToken: tokenx
         // userData?: string
     });
 
@@ -33,9 +39,9 @@ export async function createNewFlow(recipient, flowRate) {
     console.log(
         `Congrats - you've just created a money stream!
     View Your Stream At: https://app.superfluid.finance/dashboard/${recipient}
-    Network: MATIC
-    Super Token: MATICx
-    Sender: 0xDCB45e4f6762C3D7C61a00e96Fb94ADb7Cf27721
+    Network: ${NETWORK_NAME}
+    Super Token: ${TOKEN_NAME}
+    Sender: ${SENDER_ADDR}
     Receiver: ${recipient},
     FlowRate: ${flowRate}
     `
@@ -45,6 +51,52 @@ export async function createNewFlow(recipient, flowRate) {
         "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
     );
     console.error(error);
+    }
+}
+
+export async function updateExistingFlow(recipient, flowRate) {
+    const sf = await Framework.create({
+      networkName: NETWORK_NAME,
+      provider: customHttpProvider
+    });
+  
+    const signer = sf.createSigner({
+      privateKey:
+        PRIVATE_KEY,
+      provider: customHttpProvider
+    });
+  
+    const tokenxContract = await sf.loadSuperToken(SUPER_TOKEN_NAME);
+    const tokenx = tokenxContract.address;
+  
+    try {
+      const updateFlowOperation = sf.cfaV1.updateFlow({
+        flowRate: flowRate,
+        receiver: recipient,
+        superToken: tokenx
+        // userData?: string
+      });
+  
+      console.log("Updating your stream...");
+  
+      const result = await updateFlowOperation.exec(signer);
+      console.log(result);
+  
+      console.log(
+        `Congrats - you've just updated a money stream!
+      View Your Stream At: https://app.superfluid.finance/dashboard/${recipient}
+      Network: ${NETWORK_NAME}
+      Super Token: ${SUPER_TOKEN_NAME}
+      Sender: ${SENDER_ADDR}
+      Receiver: ${recipient},
+      New FlowRate: ${flowRate}
+      `
+      );
+    } catch (error) {
+      console.log(
+        "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
+      );
+      console.error(error);
     }
 }
 
