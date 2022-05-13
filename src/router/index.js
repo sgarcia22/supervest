@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 // Default Pages
-import Dashboard from "../views/Dashboard.vue";
+import Dashboard from "../views/SupervestDashboard.vue";
 // Component Pages
 import Valert from "../views/components/alert.vue";
 import Vaccrodion from "../views/components/accordion.vue";
