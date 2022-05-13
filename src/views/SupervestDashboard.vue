@@ -45,6 +45,14 @@
       Update MATICx stream
     </button>
 
+    <button
+      type="button"
+      @click="deleteStream()"
+      class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+    >
+      Delete MATICx stream
+    </button>
+
     <!-- grid wrapper card -->
     <div
       class="wrapper-card grid lg:grid-cols-4 grid-cols-1 md:grid-cols-2 gap-2 mt-5"
@@ -547,22 +555,24 @@
 <script>
   // @ is an alias to /src
   import { Icon } from "@iconify/vue";
-  import { createNewFlow, updateExistingFlow } from "../utils/superfluid";
+  import { createNewFlow, updateExistingFlow, deleteFlow } from "../utils/superfluid";
 
   export default {
     name: "Dashboard",
     methods: {
       async createStream() {
-        const walletAddress = "0x1dCF1Ec2ED51A4ffd1b3435a5d5A2EEdf1A9441A";
-        createNewFlow(walletAddress, 20000000000);
+        createNewFlow(this.walletAddress, 20000000000);
       },
       async updateStream() {
-        const walletAddress = "0x1dCF1Ec2ED51A4ffd1b3435a5d5A2EEdf1A9441A";
-        updateExistingFlow(walletAddress, 10000000000);
+        updateExistingFlow(this.walletAddress, 10000000000);
+      },
+      async deleteStream() {
+        deleteFlow(this.walletAddress);
       }
     },
     data() {
       return {
+        walletAddress: "0x1dCF1Ec2ED51A4ffd1b3435a5d5A2EEdf1A9441A",
         // for more guide apexchart.js
         // https://apexcharts.com/docs/chart-types/line-chart/
 

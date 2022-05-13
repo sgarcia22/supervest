@@ -100,6 +100,46 @@ export async function updateExistingFlow(recipient, flowRate) {
     }
 }
 
+export async function deleteFlow(recipient) {
+    const sf = await Framework.create({
+      networkName: NETWORK_NAME,
+      provider: customHttpProvider
+    });
+  
+    const signer = sf.createSigner({
+      privateKey:
+        PRIVATE_KEY,
+      provider: customHttpProvider
+    });
+  
+    const tokenxContract = await sf.loadSuperToken(SUPER_TOKEN_NAME);
+    const tokenx = tokenxContract.address;
+  
+    try {
+      const deleteFlowOperation = sf.cfaV1.deleteFlow({
+        sender: SENDER_ADDR,
+        receiver: recipient,
+        superToken: tokenx
+        // userData?: string
+      });
+  
+      console.log("Deleting your stream...");
+  
+      await deleteFlowOperation.exec(signer);
+  
+      console.log(
+        `Congrats - you've just deleted your money stream!
+         Network: ${NETWORK_NAME}
+         Super Token: ${SUPER_TOKEN_NAME}
+         Sender: ${SENDER_ADDR}
+         Receiver: ${recipient}
+      `
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
 function calculateFlowRate(amount) {
     if (typeof Number(amount) !== "number" || isNaN(Number(amount)) === true) {
         alert("You can only calculate a flowRate based on a number");
