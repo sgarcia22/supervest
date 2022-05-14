@@ -26,11 +26,31 @@
             />
           </svg>
         </button>
-        <h2
+        <!-- <h2
           class="text-md text-indigo-800 ml-3 lg:block hidden px-5 p-2 rounded-md bg-indigo-200"
         >
-          Welcome back, Mohammad Sahrullah
-        </h2>
+          Welcome back
+        </h2> -->
+
+        <div v-if="this.$store.state.web3Provider == null">
+          <button
+              type="button"
+              @click="connectWalletInit()"
+              class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 p-2 ml-3"
+            >
+              Connect your wallet
+          </button>
+      </div>
+      <div v-else>
+        <button
+              type="button"
+              class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 p-2 ml-3"
+            >
+              Welcome
+          </button>
+      </div>
+
+
       </div>
       <div class="mr-5 flex">
         <div
@@ -146,6 +166,8 @@
 
 <script>
   import { Icon } from "@iconify/vue";
+  import { connectWallet } from "../utils/web3wallet";
+
   export default {
     data() {
       return {
@@ -164,6 +186,11 @@
       },
       sidebarToggle: function () {
         document.querySelector(".flex-sidebar").classList.remove("hidden");
+      },
+      async connectWalletInit() {
+        const provider = await connectWallet();
+        this.$store.commit('changeWeb3ProviderValue', provider);
+        console.log(provider);
       },
     },
     mounted() {

@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import { store } from "./store";
 import App from "./App.vue";
 import router from "./router";
 import { Icon } from "@iconify/vue";
@@ -14,6 +15,7 @@ const app = createApp(App);
 app.use(router, Icon);
 app.use(VueApexCharts);
 app.use(PerfectScrollbar);
+app.use(store);
 app.mount("#app");
 
 router.beforeEach((to, from, next) => {
