@@ -46,7 +46,7 @@
               type="button"
               class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 p-2 ml-3"
             >
-              Welcome
+              Welcome {{ this.address }}
           </button>
       </div>
 
@@ -172,6 +172,7 @@
     data() {
       return {
         menu: false,
+        address: "",
       };
     },
     components: {
@@ -188,9 +189,10 @@
         document.querySelector(".flex-sidebar").classList.remove("hidden");
       },
       async connectWalletInit() {
+        // TODO - check on mounted if already connected 
         const provider = await connectWallet();
-        this.$store.commit('changeWeb3ProviderValue', provider);
         console.log(provider);
+        this.address = await provider.getSigner().getAddress();
       },
     },
     mounted() {
