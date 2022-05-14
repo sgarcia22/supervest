@@ -42,13 +42,18 @@
           </button>
       </div>
       <div v-else>
+          <div class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 p-2 ml-3">
+          Welcome {{ this.address }}
+        </div>
         <button
               type="button"
+              @click="logoutWallet()"
               class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 p-2 ml-3"
             >
-              Welcome {{ this.address }}
+              Logout
           </button>
       </div>
+
 
 
       </div>
@@ -166,7 +171,7 @@
 
 <script>
   import { Icon } from "@iconify/vue";
-  import { connectWallet } from "../utils/web3wallet";
+  import { connectWallet, clearWallet } from "../utils/web3wallet";
 
   export default {
     data() {
@@ -194,6 +199,10 @@
         console.log(provider);
         this.address = await provider.getSigner().getAddress();
       },
+      async logoutWallet() {
+        // await clearWallet();
+        // console.log(this.$store.state.web3Provider);
+      }
     },
     mounted() {
       var themeToggleDarkIcon = document.getElementById(
