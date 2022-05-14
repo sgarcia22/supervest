@@ -17,6 +17,7 @@
   "author": "Mohammad Sahrullah",
   "license": "MIT",
   "dependencies": {
+    "@coinbase/wallet-sdk": "^3.1.0",
     "@superfluid-finance/sdk-core": "^0.4.0",
     "@walletconnect/web3-provider": "^1.7.8",
     "apexcharts": "^3.34.0",

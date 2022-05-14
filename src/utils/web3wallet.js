@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
+import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { store } from "../store";
 
@@ -9,6 +10,13 @@ const MAINNET = "mainnet"; // WalletConnect doesn't work with testnet
 const INFURA_ID = "27e484dcd9e3efcfd25a83a78777cdf1";
 
 const providerOptions = {
+    coinbasewallet: {
+        package: CoinbaseWalletSDK, 
+        options: {
+          appName: "Web 3 Modal Demo",
+          infuraId: process.env.INFURA_KEY 
+        }
+    },
     walletconnect: {
         package: WalletConnectProvider,
         options: {
