@@ -1,17 +1,18 @@
 import axios from "axios";
+import { store } from "../store";
 
-const FROM_CHAIN = "fantom";
-const FROM_CHAIN_ID = 250;
-const TO_CHAIN = "polygon";
-const TO_CHAIN_ID =  137;
-const FROM_TOKEN = "USDC";
-const TO_TOKEN = "MATIC";
-const FROM_TOKEN_ADDR = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
+const FROM_CHAIN = "mumbai";
+const FROM_CHAIN_ID = 80001;
+const TO_CHAIN = "kovan";
+const TO_CHAIN_ID =  42;
+const FROM_TOKEN = "MATIC";
+const TO_TOKEN = "ETH";
+const FROM_TOKEN_ADDR = "0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0";
 // Token address on the destination chain. This is only required in case of transfer between EVM and non-EVM chains
 const TO_TOKEN_ADDR = "";
 // Amount in minimal divisible unit (wei)
 const TOKEN_AMOUNT = 10000000;
-const FROM_USER_ADDR = "0xEC0c6441cAc4EBC8d9CD12dF6FFB19829e9c427A";
+// const FROM_USER_ADDR = "0xEC0c6441cAc4EBC8d9CD12dF6FFB19829e9c427A";
 const BRIDGE = "nxtp";
 
 // Use SWING API to do a cross-chain swap
@@ -34,6 +35,8 @@ export async function performSwap() {
     //     console.error(error);
     //   });
 
+    const userAddr = await store.state.web3ProvidergetSigner().getAddress();
+
     // Send transfer request to bridge contract based on the route computed by getQuote api
     let txId;
     const sendCrosschainSwapOptions = {
@@ -45,7 +48,7 @@ export async function performSwap() {
           toTokenSymbol: TO_TOKEN,
           fromTokenAddress: FROM_TOKEN_ADDR,
           tokenAmount: TOKEN_AMOUNT,
-          fromUserAddress: FROM_USER_ADDR,
+          fromUserAddress: userAddr,
           fromChain: FROM_CHAIN,
           fromChainId: FROM_CHAIN_ID,
           toChain: TO_CHAIN,
@@ -79,7 +82,7 @@ export async function performSwap() {
         data: {
           bridge: BRIDGE,
           txId: txId,
-          userAddress: FROM_USER_ADDR
+          userAddress: userAddr
         }
       };
     
