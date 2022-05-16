@@ -36,7 +36,8 @@ contract Swap {
     /// @return amountOut The amount of WETH9 received.
     function swapExactInputSingle(address tokenAddressIn, uint256 amountIn, address tokenAddressOut) external returns (uint256 amountOut) {
         // msg.sender must approve this contract
-
+        // Manually approve your contract to spend the token in the caller wallet
+        // IERC20(tokenAddressIn).approve(address(swapRouter), amountIn);
         // Transfer the specified amount of DAI to this contract.
         // safeTransferWithApprove(tokenAddressIn, amountIn, address(swapRouter));
 
@@ -47,8 +48,11 @@ contract Swap {
             amountIn
         );
 
+        // Contract approving the swap router
         TransferHelper.safeApprove(tokenAddressIn, address(swapRouter), amountIn);
 
+
+        // amountOut = 0;
         // Naively set amountOutMinimum to 0. In production, use an oracle or other data source to choose a safer value for amountOutMinimum.
         // We also set the sqrtPriceLimitx96 to be 0 to ensure we swap our exact input amount.
         ISwapRouter.ExactInputSingleParams memory params =

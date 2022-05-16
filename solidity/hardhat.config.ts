@@ -51,6 +51,10 @@ const config: HardhatUserConfig = {
         process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       gas: 2100000,
       gasPrice: 8000000000
+    },
+    kovan: {
+      url: `https://eth-kovan.alchemyapi.io/v2/${process.env.ALCHEMY_API_KEY}`,
+      accounts: [`${process.env.KOVAN_PRIVATE_KEY}`]
     }
   },
   gasReporter: {

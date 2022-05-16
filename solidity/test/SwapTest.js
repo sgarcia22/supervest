@@ -2,9 +2,11 @@ const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
 // MATIC
-const TOKEN_ADDR_IN = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174";
+const TOKEN_ADDR_IN = "0xd0A1E359811322d97991E03f863a0C30C2cF029C";
+// in wei, 0.1 MATIC
 const AMOUNT_IN = 1;
-const TOKEN_ADDR_OUT = "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270";
+// WETH
+const TOKEN_ADDR_OUT = "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa";
 
 describe("Uniswap Functionality", function() {
     it("Should return amount out", async function () {
