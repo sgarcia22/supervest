@@ -29,7 +29,9 @@
       </h1>
     </div>
 
-    <button
+  <!-- Create streams -->
+
+    <!-- <button
       type="button"
       @click="createStream()"
       class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
@@ -59,7 +61,7 @@
       class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
     >
       Swap Tokens
-    </button>
+    </button> -->
 
     <!-- grid wrapper card -->
     <div
@@ -94,13 +96,13 @@
 
         <div class="block p-2 w-full">
           <p class="font-semibold text-gray-900 dark:text-gray-200 text-xl">
-            Rp.2 300 908
+            $5000
           </p>
-          <h2 class="font-normal text-gray-400 text-md mt-1">Total Payouts</h2>
+          <h2 class="font-normal text-gray-400 text-md mt-1">P/L Last 24 hours</h2>
         </div>
       </div>
       <!-- end card -->
-      <div
+      <!-- <div
         class="card bg-white dark:bg-gray-800 w-full rounded-md p-5 shadow flex"
       >
         <div class="p-2 max-w-sm">
@@ -132,9 +134,9 @@
           </p>
           <h2 class="font-normal text-gray-400 text-md mt-1">Total Sales</h2>
         </div>
-      </div>
+      </div> -->
       <!-- end card -->
-      <div
+      <!-- <div
         class="card bg-white dark:bg-gray-800 w-full rounded-md p-5 shadow flex"
       >
         <div class="p-2 max-w-sm">
@@ -172,7 +174,7 @@
             Total Customers
           </h2>
         </div>
-      </div>
+      </div> -->
       <!-- end card -->
       <div
         class="card bg-white dark:bg-gray-800 w-full rounded-md p-5 shadow flex"
@@ -204,211 +206,24 @@
 
         <div class="block p-2 w-full">
           <p class="font-semibold text-gray-900 dark:text-gray-200 text-xl">
-            7 230
+            5
           </p>
-          <h2 class="font-normal text-gray-400 text-md mt-1">Total Visit</h2>
+          <h2 class="font-normal text-gray-400 text-md mt-1">Total Streams</h2>
         </div>
       </div>
       <!-- end card -->
     </div>
     <!-- end wrapper card -->
     <div class="mt-2 lg:flex block lg:gap-2">
-      <div
-        class="bg-white dark:bg-gray-800 p-5 w-full rounded-md box-border shadow"
-      >
-        <h2 class="font-bold text-lg text-gray-800 dark:text-gray-200">
-          Total Sales
-        </h2>
-        <p class="text-gray-400 font-lexend font-normal">
-          your sales chart per-years
-        </p>
-        <span class="float-right mr-20">
-          <h2 class="text-red-500 -mt-12 flex">
-            <span class="mr-2"> 15.9% </span
-            ><span>
-              <Icon icon="akar-icons:arrow-down" />
-            </span>
-          </h2>
-        </span>
-        <span class="float-right">
-          <h2 class="text-green-500 -mt-12 flex">
-            <span class="mr-2"> 87.9% </span
-            ><span>
-              <Icon icon="akar-icons:arrow-up" />
-            </span>
-          </h2>
-        </span>
-        <br />
-        <apexchart
-          width="100%"
-          height="380"
-          type="area"
-          :options="optionsArea"
-          :series="seriesArea"
-          :sparkline="{
-            enabled: true,
-          }"
-        ></apexchart>
-        <br />
-        <hr />
-        <div class="wrapper-button mt-3">
-          <select
-            name=""
-            id=""
-            class="dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-300 border max-w-lg px-4 py-3 block rounded-md text-gray-500 dark:text-gray-400"
-          >
-            <option value="">Last 7 years</option>
-          </select>
-          <button
-            class="uppercase float-right -mt-7 border-b border-red-600 text-red-600"
-          >
-            Sales Report
-          </button>
-        </div>
-      </div>
-      <div
-        class="bg-white dark:bg-gray-800 p-5 lg:w-96 lg:mt-0 mt-4 shadow rounded-md w-full"
-      >
-        <h2 class="dark:text-gray-200 text-xl font-bold">Partner Store</h2>
-        <p class="text-gray-400">This is list if your partner online.</p>
-        <p class="font-medium font-lg mt-5 dark:text-gray-200">Online</p>
-        <div class="mt-4 grid grid-cols-1 gap-4">
-          <button class="w-full box-border flex gap-4">
-            <span>
-              <img
-                src="../assets/img/user1.png"
-                alt=""
-                width="50"
-                height="50"
-                class="rounded-full"
-              />
-            </span>
-            <span class="text-left">
-              <h1 class="font-bold text-xl dark:text-gray-200">
-                Elizabeth Begum
-              </h1>
-              <p class="text-gray-400 dark:text-gray-200">online</p>
-            </span>
-          </button>
-          <button class="w-full box-border flex gap-4">
-            <span>
-              <img
-                src="../assets/img/user2.png"
-                alt=""
-                width="50"
-                height="50"
-                class="rounded-full"
-              />
-            </span>
-            <span class="text-left">
-              <h1 class="font-bold text-xl dark:text-gray-200">Ethan Roger</h1>
-              <p class="text-gray-400 dark:text-gray-200">online</p>
-            </span>
-          </button>
-        </div>
-        <div class="mt-4 grid grid-cols-1 gap-4">
-          <button class="w-full box-border flex gap-4">
-            <span>
-              <img
-                src="../assets/img/user3.png"
-                alt=""
-                width="50"
-                height="50"
-                class="rounded-full"
-              />
-            </span>
-            <span class="text-left">
-              <h1 class="font-bold text-xl dark:text-gray-200">
-                Tobi Ferreira
-              </h1>
-              <p class="text-gray-400 dark:text-gray-200">online</p>
-            </span>
-          </button>
-          <p class="font-medium font-lg mt-5 dark:text-gray-200">Offline</p>
-          <button class="w-full box-border flex gap-4">
-            <span>
-              <img
-                src="../assets/img/user4.png"
-                alt=""
-                width="50"
-                height="50"
-                class="rounded-full"
-              />
-            </span>
-            <span class="text-left">
-              <h1 class="font-bold text-xl dark:text-gray-200">Taylor Neal</h1>
-              <p class="text-gray-400 dark:text-gray-200">2 Hours ago</p>
-            </span>
-          </button>
-          <button class="w-full box-border flex gap-4">
-            <span>
-              <img
-                src="../assets/img/user5.png"
-                alt=""
-                width="50"
-                height="50"
-                class="rounded-full"
-              />
-            </span>
-            <span class="text-left">
-              <h1 class="font-bold text-xl dark:text-gray-200">Bruno Barron</h1>
-              <p class="text-gray-400 dark:text-gray-200">4 Hours ago</p>
-            </span>
-          </button>
-        </div>
-      </div>
     </div>
     <div class="mt-2 lg:flex block lg:gap-2">
       <div
         class="mt-2 bg-white dark:bg-gray-800 p-5 w-full rounded-md box-border shadow"
       >
         <h2 class="font-bold text-lg text-gray-800 dark:text-gray-200">
-          1,780
-        </h2>
-        <p class="text-gray-400 font-lexend font-normal">
-          New products this week
-        </p>
-        <span class="float-right">
-          <h2 class="text-green-500 -mt-12 flex">
-            <span class="mr-2"> 27.9% </span
-            ><span>
-              <Icon icon="akar-icons:arrow-up" />
-            </span>
-          </h2>
-        </span>
-        <div class="wrapper-chart mt-5">
-          <apexchart
-            width="100%"
-            height="380"
-            type="bar"
-            :options="optionsBar"
-            :series="seriesBar"
-          ></apexchart>
-          <br />
-          <hr />
-          <div class="wrapper-button mt-3">
-            <select
-              name=""
-              id=""
-              class="dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-300 border max-w-lg px-4 py-3 block rounded-md text-gray-500 dark:text-gray-400"
-            >
-              <option value="">Last 7 days</option>
-            </select>
-            <button
-              class="uppercase float-right -mt-7 border-b border-red-600 text-red-600"
-            >
-              Product Report
-            </button>
-          </div>
-        </div>
-      </div>
-      <div
-        class="mt-2 bg-white dark:bg-gray-800 p-5 w-full rounded-md box-border shadow"
-      >
-        <h2 class="font-bold text-lg text-gray-800 dark:text-gray-200">
           5,355
         </h2>
-        <p class="text-gray-400 font-lexend font-normal">Visitor this week</p>
+        <p class="text-gray-400 font-lexend font-normal">Balance</p>
         <span class="float-right">
           <h2 class="text-green-500 -mt-12 flex">
             <span class="mr-2"> 47.9% </span
@@ -435,47 +250,11 @@
             >
               <option value="">Last 7 days</option>
             </select>
-            <button
+            <!-- <button
               class="uppercase float-right -mt-7 border-b border-red-600 text-red-600"
             >
               Vistor Report
-            </button>
-          </div>
-        </div>
-      </div>
-      <div
-        class="mt-2 bg-white dark:bg-gray-800 p-5 w-full rounded-md box-border shadow"
-      >
-        <h2 class="font-bold text-lg text-gray-800 dark:text-gray-200">475</h2>
-        <p class="text-gray-400 font-lexend font-normal">
-          User signups this week
-        </p>
-
-        <div class="wrapper-chart mt-5">
-          <apexchart
-            width="100%"
-            height="380"
-            type="pie"
-            :options="optionsDonut"
-            :series="seriesDonut"
-          ></apexchart>
-          <div class="p-3"></div>
-          <br />
-          <hr />
-          <div class="wrapper-button mt-3">
-            <select
-              name=""
-              id=""
-              class="dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-300 border max-w-lg px-4 py-3 block rounded-md text-gray-500 dark:text-gray-400"
-            >
-              <option value="">Last 7 years</option>
-            </select>
-
-            <button
-              class="uppercase float-right -mt-7 border-b border-red-600 text-red-600"
-            >
-              User Report
-            </button>
+            </button> -->
           </div>
         </div>
       </div>
@@ -484,10 +263,10 @@
       class="mt-2 bg-white dark:bg-gray-800 p-5 w-full rounded-md box-border shadow"
     >
       <h2 class="font-bold text-lg text-gray-800 dark:text-gray-200">
-        Latest Transactions
+        Token Holdings
       </h2>
       <p class="text-gray-400 font-lexend font-normal">
-        This is a list of latest transactions
+        This is a list of your token holdings
       </p>
       <div class="wrapping-table mt-10">
         <table
@@ -727,30 +506,6 @@
 
         seriesDonut: [20, 15, 63, 83],
         tableTransaction: [
-          {
-            transaction: "Payment from Ike yolanda",
-            datetime: "Apr 22, 2022",
-            amount: "Rp.450.000",
-            statusTransaction: "completed",
-          },
-          {
-            transaction: "Payment from Ice Wulandari",
-            datetime: "May 2, 2022",
-            amount: "Rp.250.000",
-            statusTransaction: "completed",
-          },
-          {
-            transaction: "Payment from Alfiah Gipta Jannatil Hasanah",
-            datetime: "May 5, 2022",
-            amount: "Rp.150.000",
-            statusTransaction: "progress",
-          },
-          {
-            transaction: "Payment failed from #046577",
-            datetime: "May 5, 2022",
-            amount: "Rp.180.000",
-            statusTransaction: "cancelled",
-          },
         ],
       };
       // end chart data line

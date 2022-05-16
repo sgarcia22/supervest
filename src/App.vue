@@ -18,7 +18,7 @@
 
 <script>
   // vue Components
-  import Sidebar from "@/components/Sidebar";
+  import Sidebar from "@/components/SupervestSidebar";
   import Header from "@/components/Header";
   import Footer from "@/components/Footer";
   // npm-js
