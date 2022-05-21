@@ -1,16 +1,10 @@
-import { customHttpProvider } from "./config";
 import { Framework } from "@superfluid-finance/sdk-core";
 import { ethers } from "ethers";
 import { store } from "../store";
-import Web3Modal from "web3modal";
 
 const NETWORK_NAME = "mumbai";
 const SUPER_TOKEN_NAME = "MATICx";
-// const SENDER_ADDR = "0xDCB45e4f6762C3D7C61a00e96Fb94ADb7Cf27721";
-// This is not my private key, it is a test one
-// const PRIVATE_KEY = "0xd2ebfb1517ee73c4bd3d209530a7e1c25352542843077109ae77a2c0213375f1";
-
-// Middleware Wallet Kovan ETH Address
+// Middleware Wallet Mumbai Address
 // Will perform the swap
 const RECIPIENT = "0x8ac29b4a1f99E118E2f23F705507442C2F6Ba9d5";
 
@@ -33,7 +27,6 @@ export async function createNewFlow(flowRate) {
           flowRate: flowRate,
           receiver: RECIPIENT,
           superToken: tokenx,
-          // userData?: string
     });
 
     console.log("Creating your stream...");
@@ -78,7 +71,6 @@ export async function updateExistingFlow(flowRate) {
         flowRate: flowRate,
         receiver: RECIPIENT,
         superToken: tokenx
-        // userData?: string
       });
   
       console.log("Updating your stream...");
@@ -123,7 +115,6 @@ export async function deleteFlow() {
         sender: senderAddress,
         receiver: RECIPIENT,
         superToken: tokenx
-        // userData?: string
       });
   
       console.log("Deleting your stream...");
