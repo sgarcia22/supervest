@@ -182,7 +182,7 @@
     },
     methods: {
       async createStream() {
-        createNewFlow(1000000000);
+        createNewFlow(10000000000);
       },
       async updateStream() {
         updateExistingFlow(10000000000);

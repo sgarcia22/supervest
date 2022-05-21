@@ -15,38 +15,15 @@ const SUPER_TOKEN_NAME = "MATICx";
 const RECIPIENT = "0x8ac29b4a1f99E118E2f23F705507442C2F6Ba9d5";
 
 export async function createNewFlow(flowRate) {
-    // const web3Provider = store.state.web3Provider;
-
-    // const mmProvider = new ethers.providers.Web3Provider(window.ethereum);
-    // const mmSf = await Framework.create({
-    //   networkName: "matic",
-    //   provider: mmProvider
-    // });
-
-    // const sf = await Framework.create({
-    //   networkName: NETWORK_NAME,
-    //   provider: web3Provider
-    // });
-    const web3Modal = new Web3Modal({
-      cacheProvider: false,
-      providerOptions: {}
-    });
-
-    const web3ModalRawProvider = await web3Modal.connect();
-    const web3ModalProvider = new ethers.providers.Web3Provider(web3ModalRawProvider, "any");
+    const web3ModalProvider = store.state.web3Provider;
+    const senderAddress = await web3ModalProvider.getSigner().getAddress();
 
     const sf = await Framework.create({
-      networkName: "mumbai",
+      networkName: NETWORK_NAME,
       provider: web3ModalProvider,
     });
 
     const signer = sf.createSigner({ web3Provider: web3ModalProvider });
-
-    console.log("hello");
-
-    // const signer = sf.createSigner({
-    //   web3Provider: web3Provider
-    // });
 
     const tokenxContract = await sf.loadSuperToken(SUPER_TOKEN_NAME);
     const tokenx = tokenxContract.address;
@@ -69,7 +46,7 @@ export async function createNewFlow(flowRate) {
     View Your Stream At: https://app.superfluid.finance/dashboard/${RECIPIENT}
     Network: ${NETWORK_NAME}
     Super Token: ${SUPER_TOKEN_NAME}
-    Sender: ${await web3ModalProvider.getSigner().getAddress()}
+    Sender: ${senderAddress}
     Receiver: ${RECIPIENT},
     FlowRate: ${flowRate}
     `
@@ -83,17 +60,16 @@ export async function createNewFlow(flowRate) {
 }
 
 export async function updateExistingFlow(flowRate) {
+    const web3ModalProvider = store.state.web3Provider;
+    const senderAddress = await web3ModalProvider.getSigner().getAddress();
+
     const sf = await Framework.create({
       networkName: NETWORK_NAME,
-      provider: customHttpProvider
+      provider: web3ModalProvider,
     });
-  
-    const signer = sf.createSigner({
-      privateKey:
-        PRIVATE_KEY,
-      provider: customHttpProvider
-    });
-  
+
+    const signer = sf.createSigner({ web3Provider: web3ModalProvider });
+
     const tokenxContract = await sf.loadSuperToken(SUPER_TOKEN_NAME);
     const tokenx = tokenxContract.address;
   
@@ -115,7 +91,7 @@ export async function updateExistingFlow(flowRate) {
       View Your Stream At: https://app.superfluid.finance/dashboard/${RECIPIENT}
       Network: ${NETWORK_NAME}
       Super Token: ${SUPER_TOKEN_NAME}
-      Sender: ${SENDER_ADDR}
+      Sender: ${senderAddress}
       Receiver: ${RECIPIENT},
       New FlowRate: ${flowRate}
       `
@@ -129,23 +105,22 @@ export async function updateExistingFlow(flowRate) {
 }
 
 export async function deleteFlow() {
+    const web3ModalProvider = store.state.web3Provider;
+    const senderAddress = await web3ModalProvider.getSigner().getAddress();
+
     const sf = await Framework.create({
       networkName: NETWORK_NAME,
-      provider: customHttpProvider
+      provider: web3ModalProvider,
     });
-  
-    const signer = sf.createSigner({
-      privateKey:
-        PRIVATE_KEY,
-      provider: customHttpProvider
-    });
-  
+
+    const signer = sf.createSigner({ web3Provider: web3ModalProvider });
+
     const tokenxContract = await sf.loadSuperToken(SUPER_TOKEN_NAME);
     const tokenx = tokenxContract.address;
   
     try {
       const deleteFlowOperation = sf.cfaV1.deleteFlow({
-        sender: SENDER_ADDR,
+        sender: senderAddress,
         receiver: RECIPIENT,
         superToken: tokenx
         // userData?: string
@@ -159,7 +134,7 @@ export async function deleteFlow() {
         `Congrats - you've just deleted your money stream!
          Network: ${NETWORK_NAME}
          Super Token: ${SUPER_TOKEN_NAME}
-         Sender: ${SENDER_ADDR}
+         Sender: ${senderAddress}
          Receiver: ${RECIPIENT}
       `
       );
