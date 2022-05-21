@@ -1,123 +1,105 @@
-import axios from "axios";
-import { store } from "../store";
+const { ethers } = require('ethers')
+const  { abi: IUniswapV3PoolABI } = require('@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json');
+const { abi: SwapRouterABI} = require('@uniswap/v3-periphery/artifacts/contracts/interfaces/ISwapRouter.sol/ISwapRouter.json')
+const { getPoolImmutables, getPoolState } = require('./helpers');
+const ERC20ABI = require('./abi.json');
 
-const FROM_CHAIN = "mumbai";
-const FROM_CHAIN_ID = 80001;
-const TO_CHAIN = "kovan";
-const TO_CHAIN_ID =  42;
-const FROM_TOKEN = "MATIC";
-const TO_TOKEN = "ETH";
-const FROM_TOKEN_ADDR = "0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0";
-// Token address on the destination chain. This is only required in case of transfer between EVM and non-EVM chains
-const TO_TOKEN_ADDR = "";
-// Amount in minimal divisible unit (wei)
-const TOKEN_AMOUNT = 10000000;
-// const FROM_USER_ADDR = "0xEC0c6441cAc4EBC8d9CD12dF6FFB19829e9c427A";
-const BRIDGE = "nxtp";
+// require('dotenv').config();
 
-// Use SWING API to do a cross-chain swap
+const INFURA_URL_TESTNET = process.env.VUE_APP_INFURA_URL_TESTNET;
+const WALLET_ADDRESS = process.env.VUE_APP_WALLET_ADDRESS;
+const WALLET_SECRET = process.env.VUE_APP_WALLET_SECRET;
+
+// Blockchain provider
+const provider = new ethers.providers.JsonRpcProvider(INFURA_URL_TESTNET) // Ropsten
+// Wrapped ETH to Uniswap Pool Address
+const poolAddress = "0x4D7C363DED4B3b4e1F954494d2Bc3955e49699cC" // UNI/WETH
+// Deployed Uniswap Swap Router to actually make the swap
+const swapRouterAddress = '0xE592427A0AEce92De3Edee1F18E0157C05861564'
+
+// Information for wrapped ether token
+const name0 = 'Wrapped Ether'
+const symbol0 = 'WETH'
+const decimals0 = 18
+const address0 = '0xc778417e063141139fce010982780140aa0cd5ab'
+
+// Information for Uniswap token
+const name1 = 'Uniswap Token'
+const symbol1 = 'UNI'
+const decimals1 = 18
+const address1 = '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984'
+
+// Perform swap between two tokens using Uniswap API
 export async function performSwap() {
-    // Compare quote from different bridges and find the best price
-    // const getQuoteOptions = {
-    //     method: 'GET',
-    //     url: 'https://swap.dev.swing.xyz/v0/transfer/quote',
-    //     params: {
-    //         tokenSymbol: 'ETH',
-    //         fromChain: FROM_CHAIN,
-    //         toChain: TO_CHAIN
-    //     },
-    //     headers: {'Content-Type': 'application/json'}
-    //   };
-      
-    //   axios.request(getQuoteOptions).then(function (response) {
-    //     console.log(response.data);
-    //   }).catch(function (error) {
-    //     console.error(error);
-    //   });
+  // Initialize contract for the pool
+  const poolContract = new ethers.Contract(
+    poolAddress,
+    IUniswapV3PoolABI,
+    provider
+  );
 
-    const userAddr = await store.state.web3ProvidergetSigner().getAddress();
+  // Query pool to grab immutable variables from it
+  const immutables = await getPoolImmutables(poolContract);
 
-    // Send transfer request to bridge contract based on the route computed by getQuote api
-    let txId;
-    const sendCrosschainSwapOptions = {
-        method: 'POST',
-        url: 'https://swap.dev.swing.xyz/v0/transfer/send',
-        headers: {'Content-Type': 'application/json'},
-        data: {
-          tokenSymbol: FROM_TOKEN,
-          toTokenSymbol: TO_TOKEN,
-          fromTokenAddress: FROM_TOKEN_ADDR,
-          tokenAmount: TOKEN_AMOUNT,
-          fromUserAddress: userAddr,
-          fromChain: FROM_CHAIN,
-          fromChainId: FROM_CHAIN_ID,
-          toChain: TO_CHAIN,
-          toChainId: TO_CHAIN_ID,
-          route: [
-                {
-                    bridge: BRIDGE, 
-                    bridgeTokenAddress: '',
-                    name: FROM_TOKEN, 
-                    part: 100
-                }
-            ]
-        }
-      };
-      
-    await axios.request(sendCrosschainSwapOptions).then(function (response) {
-        console.log("Send Crosschain Swap Options Response");
-        console.log(response.data);
-        txId = response.data.tx.txId;
-    }).catch(function (error) {
-        console.error(error);
-    });
+  // Query pool to grab mutable variables from it, such as the current price
+  const state = await getPoolState(poolContract);
 
-      console.log("Next option");
+  // Connect to swap wallet
+  const wallet = new ethers.Wallet(WALLET_SECRET);
+  // Connect the wallet to the provider
+  const connectedWallet = wallet.connect(provider);
 
-    // [NXTP Only] Genereate signature which is required in the NXTP claim request
-    const signOptions = {
-        method: 'POST',
-        url: 'https://swap.dev.swing.xyz/v0/transfer/sign',
-        headers: {'Content-Type': 'application/json'},
-        data: {
-          bridge: BRIDGE,
-          txId: txId,
-          userAddress: userAddr
-        }
-      };
-    
-    await axios.request(signOptions).then(function (response) {
-        console.log("Sign Response");
-        console.log(response.data);
-    }).catch(function (error) {
-        console.error(error);
-    });
+  // Initialize contract for the swap contract
+  const swapRouterContract = new ethers.Contract(
+    swapRouterAddress,
+    SwapRouterABI,
+    provider
+  );
 
-    // // Claim Crosschain Swap 
+  const inputAmount = 0.001;
+  // Convert to amount that Uniswap expects, first 18 numbers represents decimals.
+  // Shift decimal over 18 times
+  // .001 => 1 000 000 000 000 000
+  const amountIn = ethers.utils.parseUnits(
+    inputAmount.toString(),
+    decimals0
+  );
 
-    // const claimCrosschainSwapOptions = {
-    //     method: 'POST',
-    //     url: 'https://swap.dev.swing.xyz/v0/transfer/claim',
-    //     headers: {'Content-Type': 'application/json'},
-    //     data: {
-    //         fromChain: {
-    //             chainId: '250', 
-    //             slug: 'fantom'
-    //         },
-    //         toChain: {
-    //             chainId: '1285', 
-    //             slug: 'moonriver'
-    //         },
-    //         bridge: 'nxtp',
-    //         txId: '0x47a83956ba8b7c6d99b1a4bf8c90177c8efbe5e51129c01961a6fc5f6956ef05',
-    //         userAddress: '0x54BEec0EB7F2192CA4BEB4649eEbde71dCb8eB36',
-    //         signature: '0xd1745195f41168ca0984f97b1bc5fb6638616f1b2445bfee505a620478bdcab14d1f5599c478a92f663d2543de8efd717b0d4c766411b6f7377dad2050d49b411b'
-    //     }
-    // };
+  // Contract on wrapped ether to give Uniswap permission to access ether in our wallet
+  // TODO: Multiply by 100000 to give Uniswap unlimited access to ether in wallet, ONLY FOR TESTNET
+  const approvalAmount = (amountIn * 100000).toString();
+  // The token contract that will approve our spending amount with Uniswap API
+  const tokenContract0 = new ethers.Contract(
+    address0,
+    ERC20ABI,
+    provider
+  );
 
-    // axios.request(claimCrosschainSwapOptions).then(function (response) {
-    //     console.log(response.data);
-    // }).catch(function (error) {
-    //     console.error(error);
-    // });
+  await tokenContract0.connect(connectedWallet).approve(
+    swapRouterAddress,
+    approvalAmount
+  );
+
+  // Objet that represents details regarding our transaction
+  const params = {
+    tokenIn: immutables.token1,
+    tokenOut: immutables.token0,
+    fee: immutables.fee,
+    recipient: WALLET_ADDRESS,
+    deadline: Math.floor(Date.now() / 1000) + (60 * 10),
+    amountIn: amountIn,
+    amountOutMinimum: 0,
+    sqrtPriceLimitX96: 0,
+  }
+
+  // Perform the swap with the exact input that we want to spend
+  swapRouterContract.connect(connectedWallet).exactInputSingle(
+    params,
+    {
+      gasLimit: ethers.utils.hexlify(1000000)
+    }
+  ).then(transaction => {
+    console.log(transaction)
+  });
+
 }

@@ -36,8 +36,14 @@ contract Swap {
     /// @return amountOut The amount of WETH9 received.
     function swapExactInputSingle(address tokenAddressIn, uint256 amountIn, address tokenAddressOut) external returns (uint256 amountOut) {
         // msg.sender must approve this contract
+
         // Manually approve your contract to spend the token in the caller wallet
-        // IERC20(tokenAddressIn).approve(address(swapRouter), amountIn);
+        // if (IERC20(tokenAddressIn).allowance(address(swapRouter), msg.sender) == 0){ 
+        //     IERC20(tokenAddressIn).approve(address(swapRouter), amountIn);
+        // }
+        // else {
+        //     IERC20(tokenAddressIn).safeIncreaseAllowance(address(swapRouter), amountIn);
+        // }
         // Transfer the specified amount of DAI to this contract.
         // safeTransferWithApprove(tokenAddressIn, amountIn, address(swapRouter));
 
