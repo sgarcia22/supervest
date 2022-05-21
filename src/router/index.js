@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 // Default Pages
 import Dashboard from "../views/SupervestDashboard.vue";
+import StreamsDashboard from "../views/StreamsDashboard.vue";
 // Component Pages
 import Valert from "../views/components/alert.vue";
 import Vaccrodion from "../views/components/accordion.vue";
@@ -19,6 +20,14 @@ const routes = [
     component: Dashboard,
     meta: { title: "Dashboard " + appname },
   },
+  
+  {
+    path: "/streams",
+    name: "StreamsDashboard",
+    component: StreamsDashboard,
+    meta: { title: "StreamsDashboard " + appname },
+  },
+
 
   // Components based Routes
   {

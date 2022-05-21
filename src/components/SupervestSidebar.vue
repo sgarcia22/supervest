@@ -49,11 +49,11 @@
 
         <div class="item mt-3">
             <router-link
-                to="/component/button"
+                to="/streams"
                 exact
                 class="w-full flex text-left rounded-md box-border p-3 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
-                <span class="mr-3 text-xl"><Icon icon="bxs:dashboard" /></span>
+                <span class="mr-3 text-xl"><Icon icon="gg:components" /></span>
                 <span class="w-full"> Streams </span>
             </router-link>
         </div>
