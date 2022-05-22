@@ -117,12 +117,22 @@
         </h2>
         <p class="text-gray-400 font-lexend font-normal">MATIC PRICE</p>
         <span class="float-right">
-          <h2 class="text-green-500 -mt-12 flex">
-            <span class="mr-2"> 47.9% </span
-            ><span>
-              <Icon icon="akar-icons:arrow-up" />
-            </span>
-          </h2>
+          <div v-if="stonksUp">
+            <h2 class="text-green-500 -mt-12 flex">
+              <span class="mr-2"> {{percentageDifferece}}% </span
+              ><span>
+                <Icon icon="akar-icons:arrow-up" />
+              </span>
+            </h2>
+          </div>
+          <div v-else>
+            <h2 class="text-red-500 -mt-12 flex">
+              <span class="mr-2"> -{{percentageDifferece}}% </span
+              ><span>
+                <Icon icon="akar-icons:arrow-down" />
+              </span>
+            </h2>
+          </div>
         </span>
         <div class="wrapper-chart mt-5">
           <apexchart
@@ -260,7 +270,9 @@
           verifySignature: true,
         });
         // console.log(maticPrice);
-        this.seriesVisitor[0].data = maticPrice
+        this.seriesVisitor[0].data = maticPrice;
+        this.percentageDifferece = ((maticPrice[0] - maticPrice[maticPrice.length - 1]) / maticPrice[0]) * 100;
+        this.stonksUp = maticPrice[maticPrice.length - 1] > maticPrice[0];
       }
     },
     async mounted() {
@@ -272,6 +284,8 @@
         currentMaticPriceData: {},
         weeklyMaticPriceData: [{
             data: [] }],
+        percentageDifferece: 0,
+        stonksUp: true,
         walletAddress: "0x1dCF1Ec2ED51A4ffd1b3435a5d5A2EEdf1A9441A",
         // for more guide apexchart.js
         // https://apexcharts.com/docs/chart-types/line-chart/
