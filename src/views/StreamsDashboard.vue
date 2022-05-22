@@ -62,7 +62,7 @@
                     USDC
                 </td>
                 <td class="py-4 w-1/3">
-                <v-select class="px-4" :options="token2Config.options" v-model="selectedOption"></v-select>
+                <v-select class="px-4 border-gray-700 " :options="token2Config.options" v-model="selectedOption"></v-select>
                 </td>
                 <td class="py-4">
                     <div
@@ -271,19 +271,19 @@
 </script>
 <style scoped>
 >>> {
-  --vs-controls-color: #664cc3;
-  --vs-border-color: #664cc3;
+  --vs-controls-color: #e5e7eb;
+  --vs-border-color: #e5e7eb;
 
-  --vs-dropdown-bg: #282c34;
-  --vs-dropdown-color: #cc99cd;
-  --vs-dropdown-option-color: #cc99cd;
+  --vs-dropdown-bg: #374151;
+  --vs-dropdown-color: #9ca3af;
+  --vs-dropdown-option-color: #9ca3af;
 
-  --vs-selected-bg: #664cc3;
+  --vs-selected-bg: #e5e7eb;
   --vs-selected-color: #eeeeee;
 
   --vs-search-input-color: #eeeeee;
 
-  --vs-dropdown-option--active-bg: #664cc3;
+  --vs-dropdown-option--active-bg: #e5e7eb;
   --vs-dropdown-option--active-color: #eeeeee;
 }
 </style>

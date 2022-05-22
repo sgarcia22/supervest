@@ -171,8 +171,8 @@ export async function deleteFlow(tokenType) {
       store.commit('alterStream',  {
         transaction: tokenType,
         superToken: tokenType,
-        datetime: storedTransaction.datetime,
-        flowRate: storedTransaction.flowRate,
+        datetime: store.state.streams.findIndex(obj => obj.transaction === tokenType).datetime,
+        flowRate: '$0/month',
         statusTransaction: "cancelled",
         },
       );

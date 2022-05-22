@@ -16,7 +16,7 @@ export const store = createStore({
       },
       alterStream(state, newVal) {
         const index = state.streams.findIndex(obj => obj.transaction === newVal.transaction);
-        state.sreams[index] = newVal;
+        state.streams[index] = newVal;
       }
     }
 });
