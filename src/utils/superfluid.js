@@ -1,16 +1,15 @@
 import { Framework } from "@superfluid-finance/sdk-core";
 import { ethers } from "ethers";
 import { store } from "../store";
-import { performSwap } from './swap';
 import { getDate } from './helpers';
-// import redstone from "redstone-api";
 
-const NETWORK_NAME = "mumbai";
-const SUPER_TOKEN_NAME = "fUSDCx";
+const NETWORK_NAME = "matic";
+const SUPER_TOKEN_NAME = "USDCx";
 // Middleware Wallet Mumbai Address
 // Will perform the swap
 const RECIPIENT = "0x8ac29b4a1f99E118E2f23F705507442C2F6Ba9d5";
 
+//TODO - wrap assets to USDCx
 export async function createNewFlow(toToken, flowRate) {
     const web3ModalProvider = store.state.web3Provider;
     const senderAddress = await web3ModalProvider.getSigner().getAddress();
@@ -28,48 +27,87 @@ export async function createNewFlow(toToken, flowRate) {
     const flowRateSecond = calculateFlowRate(flowRate);
     console.log(flowRateSecond);
 
-    try {
-      const createFlowOperation = sf.cfaV1.createFlow({
-          flowRate: flowRateSecond,
-          receiver: RECIPIENT,
-          superToken: tokenx,
-       });
+    // Get Polygon recommended gas fees
+    // let maxFee;
+    // fetch('https://gasstation-mainnet.matic.network/v2')
+    // .then(response => response.json())
+    // .then(json => {
+    //     maxFee = json.standard.maxFee;
+    //     console.log(json)
+    // });
 
-      console.log("Creating your stream...");
+    const upgradeOperation = tokenxContract.upgrade({
+      amount: flowRate.toString()
+    });
+    //upgrade and create stream at once
+    const createFlowOperation = tokenxContract.createFlow({
+      sender: senderAddress,
+      receiver: RECIPIENT,
+      flowRate: flowRateSecond
+    });
 
-      const result = await createFlowOperation.exec(signer);
-      console.log(result);
-
+    await sf
+    .batchCall([upgradeOperation, createFlowOperation])
+    .exec(signer)
+    .then(function (tx) {
       console.log(
-          `Congrats - you've just created a money stream!
-      View Your Stream At: https://app.superfluid.finance/dashboard/${RECIPIENT}
-      Network: ${NETWORK_NAME}
-      Super Token: ${SUPER_TOKEN_NAME}
-      Sender: ${senderAddress}
-      Receiver: ${RECIPIENT},
-      FlowRate: ${flowRate}
-      `
+        `Congrats - you've just successfully executed a batch call!
+        You have completed 2 operations in a single tx 🤯
+        View the tx here:  https://kovan.etherscan.io/tx/${tx.hash}
+        View Your Stream At: https://app.superfluid.finance/dashboard/${RECIPIENT}
+        Network: Kovan
+        Super Token: DAIx
+        Sender: ${senderAddress}
+        Receiver: ${RECIPIENT},
+        FlowRate: ${flowRate}/month
+        `
       );
+    });
 
-      const streamDetails = {
-        transaction: SUPER_TOKEN_NAME,
-        superToken: SUPER_TOKEN_NAME,
-        datetime: getDate(),
-        flowRate: flowRate,
-        statusTransaction: "progress",
-        };
+    // try {
+    //   const createFlowOperation = sf.cfaV1.createFlow({
+    //       flowRate: flowRateSecond,
+    //       receiver: RECIPIENT,
+    //       superToken: tokenx,
+    //       overrides: {
+    //         gasLimit: "30000",
+    //       },
+    //    });
 
-      store.commit('addStream', streamDetails);
-      store.commit('setswapFunctionTimer', streamDetails);
+    //   console.log("Creating your stream...");
+
+    //   const result = await createFlowOperation.exec(signer);
+    //   console.log(result);
+
+    //   console.log(
+    //       `Congrats - you've just created a money stream!
+    //   View Your Stream At: https://app.superfluid.finance/dashboard/${RECIPIENT}
+    //   Network: ${NETWORK_NAME}
+    //   Super Token: ${SUPER_TOKEN_NAME}
+    //   Sender: ${senderAddress}
+    //   Receiver: ${RECIPIENT},
+    //   FlowRate: ${flowRate}
+    //   `
+    //   );
+
+    //   const streamDetails = {
+    //     transaction: SUPER_TOKEN_NAME,
+    //     superToken: SUPER_TOKEN_NAME,
+    //     datetime: getDate(),
+    //     flowRate: flowRate,
+    //     statusTransaction: "progress",
+    //     };
+
+    //   store.commit('addStream', streamDetails);
+    //   store.commit('setswapFunctionTimer', streamDetails);
           
-    } catch (error) {
-    console.log(
-        "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
-    );
-    console.error(error);
-    }
+    // } catch (error) {
+    // console.log(
+    //     "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
+    // );
+    // console.error(error);
+    // }
 }
-
 
 export async function updateExistingFlow(tokenType, flowRate) {
     const web3ModalProvider = store.state.web3Provider;

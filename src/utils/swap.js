@@ -73,14 +73,14 @@ export async function performSwap(flowRate) {
 
   console.log(amountIn);
 
-  // Contract on wrapped ether to give Uniswap permission to access ether in our wallet
-  const approvalAmount = (amountIn).toString();
-  // The token contract that will approve our spending amount with Uniswap API
-  const tokenContract0 = new ethers.Contract(
-    address0,
-    ERC20ABI,
-    provider
-  );
+  // // Contract on wrapped ether to give Uniswap permission to access ether in our wallet
+  // const approvalAmount = (amountIn).toString();
+  // // The token contract that will approve our spending amount with Uniswap API
+  // const tokenContract0 = new ethers.Contract(
+  //   address0,
+  //   ERC20ABI,
+  //   provider
+  // );
 
   // await tokenContract0.connect(connectedWallet).approve(
   //   swapRouterAddress,

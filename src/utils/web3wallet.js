@@ -26,7 +26,7 @@ const providerOptions = {
 };
 
 const web3Modal = new Web3Modal({
-    network: TESTNET,
+    network: MAINNET,
     cacheProvider: false,
     providerOptions
 });
