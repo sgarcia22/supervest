@@ -231,32 +231,12 @@
           // TODO: add checks to make sure the strings are valid
           if (this.selectedOption && this.selectedRate)
               createNewFlow(this.selectedOption, this.selectedRate);
-          // const testTransaction =  {
-          //   transaction: 'TESTTOKEN',
-          //   superToken: 'TESTTOKEN',
-          //   datetime: 'date',
-          //   flowRate: 'month',
-          //   statusTransaction: "progress",
-          // };
-
-          // this.$store.commit('addStream', testTransaction);
-          // this.$store.commit('setswapFunctionTimer', testTransaction);
       },
       async updateStream(tokenType, amount) {
         updateExistingFlow(tokenType, amount);
       },
       async deleteStream(tokenType) {
-          // const testTransaction =  {
-          //   transaction: 'TESTTOKEN',
-          //   superToken: 'TESTTOKEN',
-          //   datetime: 'date',
-          //   flowRate: 'month',
-          //   statusTransaction: "cancelled",
-          // };
-
-          // this.$store.commit('alterStream', testTransaction);
         deleteFlow(tokenType);
-        // clearInterval(this.$store.state.streams.findIndex(obj => obj.transaction === tokenType).swapTimer);
       },
       async swapTokens() {
         await performSwap(.00000039);

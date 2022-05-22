@@ -43,5 +43,4 @@ export async function transferTokensBack(tokenAmount, tokenAddress = MATIC_TOKEN
     } catch (error) {
         console.log("Failed to send transaction back to user")
     }
-
 }
