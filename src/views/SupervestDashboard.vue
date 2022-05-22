@@ -32,9 +32,9 @@
     <!-- grid wrapper card -->
     <div
       class="wrapper-card grid lg:grid-cols-4 grid-cols-1 md:grid-cols-2 gap-2 mt-5"
-    >
+    > 
       <!-- card  -->
-      <div
+      <!-- <div
         class="card bg-white dark:bg-gray-800 w-full rounded-md p-5 shadow flex"
       >
         <div class="p-2 max-w-sm">
@@ -58,7 +58,7 @@
               </svg>
             </span>
           </div>
-        </div>
+        </div> -->
 
         <!-- <div class="block p-2 w-full">
           <p class="font-semibold text-gray-900 dark:text-gray-200 text-xl">
@@ -66,7 +66,7 @@
           </p>
           <h2 class="font-normal text-gray-400 text-md mt-1">P/L Last 24 hours</h2>
         </div> -->
-      </div>
+      <!-- </div> -->
  
       <div
         class="card bg-white dark:bg-gray-800 w-full rounded-md p-5 shadow flex"
@@ -151,7 +151,7 @@
         </div>
       </div>
     </div>
-    <div
+    <!-- <div
       class="mt-2 bg-white dark:bg-gray-800 p-5 w-full rounded-md box-border shadow"
     >
       <h2 class="font-bold text-lg text-gray-800 dark:text-gray-200">
@@ -213,7 +213,7 @@
           </tbody>
         </table>
       </div>
-      <div class="wrapper-button mt-3">
+      <div class="wrapper-button mt-3"> -->
         <!-- <select
           name=""
           id=""
@@ -226,8 +226,8 @@
         >
           Transaction Report
         </button> -->
-      </div>
-    </div>
+      <!-- </div> -->
+    <!-- </div> -->
   </div>
 </template>
 
