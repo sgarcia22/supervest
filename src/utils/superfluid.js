@@ -1,10 +1,9 @@
 import { Framework } from "@superfluid-finance/sdk-core";
 import { ethers } from "ethers";
 import { store } from "../store";
-import { customHttpProvider } from "./config";
 import { performSwap } from './swap';
 import { getDate } from './helpers';
-import redstone from "redstone-api";
+// import redstone from "redstone-api";
 
 const NETWORK_NAME = "mumbai";
 const SUPER_TOKEN_NAME = "fUSDCx";
@@ -52,20 +51,17 @@ export async function createNewFlow(toToken, flowRate) {
       `
       );
 
-      store.commit('addStream',  {
-          transaction: SUPER_TOKEN_NAME,
-          superToken: SUPER_TOKEN_NAME,
-          datetime: getDate(),
-          flowRate: `${flowRate}/month`,
-          statusTransaction: "progress",
-          },
-        );
+      const streamDetails = {
+        transaction: SUPER_TOKEN_NAME,
+        superToken: SUPER_TOKEN_NAME,
+        datetime: getDate(),
+        flowRate: `${flowRate}/month`,
+        statusTransaction: "progress",
+        };
 
-      // Start process to swap tokens continuously
-        // await performSwap();
-      // Send swapped amount back to original wallet
+      store.commit('addStream', streamDetails);
+      store.commit('setswapFunctionTimer', streamDetails);
           
-
     } catch (error) {
     console.log(
         "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
@@ -165,8 +161,6 @@ export async function deleteFlow(tokenType) {
       `
       );
 
-
-      const storedTransaction = store.state.streams.findIndex(obj => obj.transaction === tokenType);
       // Update Vue store
       store.commit('alterStream',  {
         transaction: tokenType,

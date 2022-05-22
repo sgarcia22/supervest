@@ -4,6 +4,7 @@ const { abi: SwapRouterABI} = require('@uniswap/v3-periphery/artifacts/contracts
 const { getPoolImmutables, getPoolState } = require('./helpers');
 const ERC20ABI = require('./abi.json');
 import { customHttpProvider } from "./config";
+import { store } from "../store";
 
 // require('dotenv').config();
 const INFURA_URL_TESTNET = process.env.VUE_APP_INFURA_URL_TESTNET;
@@ -31,7 +32,9 @@ const decimals1 = 18
 const address1 = '0x0000000000000000000000000000000000001010'
 
 // Perform swap between two tokens using Uniswap API
-export async function performSwap() {
+export async function performSwap(flowRate) {
+  console.log("Swap being Called " + flowRate);
+
   // Initialize contract for the pool
   const poolContract = new ethers.Contract(
     poolAddress,
@@ -43,7 +46,7 @@ export async function performSwap() {
   const immutables = await getPoolImmutables(poolContract);
 
   // Query pool to grab mutable variables from it, such as the current price
-  const state = await getPoolState(poolContract);
+  // const state = await getPoolState(poolContract);
 
   // Connect to swap wallet
   const wallet = new ethers.Wallet(WALLET_SECRET);
@@ -57,7 +60,8 @@ export async function performSwap() {
     provider
   );
 
-  const inputAmount = 0.001;
+  // const inputAmount = 0.001;
+  const inputAmount = flowRate * 10;
   // Convert to amount that Uniswap expects, first 18 numbers represents decimals.
   // Shift decimal over 18 times
   // .001 => 1 000 000 000 000 000
