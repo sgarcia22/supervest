@@ -1,7 +1,7 @@
 {
-  "name": "windzo",
+  "name": "supervest",
   "version": "1.0.1",
-  "description": "Free Open Source Template Dashboard Admin Vue Tailwind CSS",
+  "description": "Makes investing in volatile tokens easier in the long run",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -11,11 +11,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sahrullahh/windzo.git"
+    "url": "git+https://github.com/sgarcia22/supervest.git"
   },
-  "homepage": "https://windzo.vercel.app",
-  "author": "Mohammad Sahrullah",
-  "license": "MIT",
+  "homepage": "https://supervest-ve392a.argoapp.io/",
+  "author": "Samantha Garcia",
   "dependencies": {
     "@coinbase/wallet-sdk": "^3.1.0",
     "@superfluid-finance/sdk-core": "^0.4.0",

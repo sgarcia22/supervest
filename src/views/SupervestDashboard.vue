@@ -33,41 +33,6 @@
     <div
       class="wrapper-card grid lg:grid-cols-4 grid-cols-1 md:grid-cols-2 gap-2 mt-5"
     > 
-      <!-- card  -->
-      <!-- <div
-        class="card bg-white dark:bg-gray-800 w-full rounded-md p-5 shadow flex"
-      >
-        <div class="p-2 max-w-sm">
-          <div
-            class="bg-orange-200 rounded-full w-14 h-14 text-lg p-3 text-orange-600 mx-auto"
-          >
-            <span class="">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-                role="img"
-                width="30px"
-                height="30px"
-                preserveAspectRatio="xMidYMid meet"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  d="M10 16V8a2 2 0 0 1 2-2h9V5c0-1.1-.9-2-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-1h-9a2 2 0 0 1-2-2zm3-8c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h9V8h-9zm3 5.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5s1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"
-                />
-              </svg>
-            </span>
-          </div>
-        </div> -->
-
-        <!-- <div class="block p-2 w-full">
-          <p class="font-semibold text-gray-900 dark:text-gray-200 text-xl">
-            $5000
-          </p>
-          <h2 class="font-normal text-gray-400 text-md mt-1">P/L Last 24 hours</h2>
-        </div> -->
-      <!-- </div> -->
- 
       <div
         class="card bg-white dark:bg-gray-800 w-full rounded-md p-5 shadow flex"
       >
@@ -152,92 +117,10 @@
             >
               <option value="">Last 7 days</option>
             </select>
-            <!-- <button
-              class="uppercase float-right -mt-7 border-b border-red-600 text-red-600"
-            >
-              Vistor Report
-            </button> -->
           </div>
         </div>
       </div>
     </div>
-    <!-- <div
-      class="mt-2 bg-white dark:bg-gray-800 p-5 w-full rounded-md box-border shadow"
-    >
-      <h2 class="font-bold text-lg text-gray-800 dark:text-gray-200">
-        Token Holdings
-      </h2>
-      <p class="text-gray-400 font-lexend font-normal">
-        This is a list of your token holdings
-      </p>
-      <div class="wrapping-table mt-10">
-        <table
-          class="w-full text-sm text-left text-gray-500 dark:text-gray-400 lg:overflow-auto overflow-x-scroll"
-        >
-          <thead
-            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-          >
-            <tr>
-              <th scope="col" class="uppercase px-6 py-3">Transaction</th>
-              <th scope="col" class="uppercase px-6 py-3">Date & Time</th>
-              <th scope="col" class="uppercase px-6 py-3">Amount</th>
-              <th scope="col" class="uppercase px-6 py-3">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50"
-              v-for="items in tableTransaction"
-              :key="items.transaction"
-            >
-              <td class="px-6 py-4">
-                {{ items.transaction }}
-              </td>
-              <td class="px-6 py-4">
-                {{ items.datetime }}
-              </td>
-              <td class="px-6 py-4">
-                {{ items.amount }}
-              </td>
-              <td class="px-6 py-4">
-                <span
-                  class="text-green-800 bg-green-300 px-3 py-1 rounded-md"
-                  v-if="items.statusTransaction == 'completed'"
-                >
-                  {{ items.statusTransaction }}
-                </span>
-                <span
-                  class="text-purple-800 bg-purple-300 px-3 py-1 rounded-md"
-                  v-else-if="items.statusTransaction == 'progress'"
-                >
-                  {{ items.statusTransaction }}
-                </span>
-                <span
-                  class="text-red-800 bg-red-300 px-3 py-1 rounded-md"
-                  v-else
-                >
-                  {{ items.statusTransaction }}
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="wrapper-button mt-3"> -->
-        <!-- <select
-          name=""
-          id=""
-          class="dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-300 border max-w-lg px-4 py-3 block rounded-md text-gray-500 dark:text-gray-400"
-        >
-          <option value="">Last 7 years</option>
-        </select> -->
-        <!-- <button
-          class="uppercase float-right -mt-7 border-b border-red-600 text-red-600"
-        >
-          Transaction Report
-        </button> -->
-      <!-- </div> -->
-    <!-- </div> -->
   </div>
 </template>
 

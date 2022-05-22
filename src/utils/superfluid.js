@@ -22,31 +22,6 @@ export async function createNewFlow(toToken, flowRate) {
 
     const signer = sf.createSigner({ web3Provider: web3ModalProvider });
 
-    // Approve spending
-    // const USDC = new ethers.Contract(
-    //   "0xCAa7349CEA390F89641fe306D93591f87595dc1F",
-    //   ERC20ABI,
-    //   signer
-    // );
-
-    // console.log(USDC);
-    // try {
-    //   console.log("approving USDC spend");
-    //   await USDC.approve(
-    //     "0xe3cb950cb164a31c66e32c320a800d477019dcff",
-    //     flowRate.toString()
-    //   ).then(function (tx) {
-    //     console.log(
-    //       `Congrats, you just approved your USDC spend. You can see this tx at https://polygonscan.com/address/${tx.hash}`
-    //     );
-    //   });
-    // } catch (error) {
-    //   console.error(error);
-    // }
-  
-
-  //
-
   const tokenxContract = await sf.loadSuperToken(SUPER_TOKEN_NAME);
 
   const flowRateSecond = calculateFlowRate(flowRate);
@@ -215,9 +190,7 @@ export function calculateFlowRate(amountInDollars) {
         return 0;
         }
         const monthlyAmount = ethers.utils.parseEther(amountInDollars.toString());
-      const calculatedFlowRate = Math.floor(monthlyAmount / 3600 / 24 / 30);
-        // Convert from month to second
-        // const calculatedFlowRate = amountInDollars / (3600 * 24 * 30);
+        const calculatedFlowRate = Math.floor(monthlyAmount / 3600 / 24 / 30);
         return calculatedFlowRate;
     }
 }

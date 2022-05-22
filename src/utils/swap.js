@@ -39,16 +39,8 @@ const SUPER_TOKEN_NAME = "USDCx";
 // Perform swap between two tokens using Uniswap API
 export async function performSwap(flowRate) {
   console.log("Swap being Called " + flowRate);
-  // Multiply the flow rate by 10 because this function is called every 10 seconds
-  const inputAmount = 1 * 9;
-  // Convert to amount that Uniswap expects, first 18 numbers represents decimals.
-  // Shift decimal over 18 times
-  // .001 => 1 000 000 000 000 000
-  // const amountIn = ethers.utils.parseUnits(
-  //   inputAmount.toString(),
-  //   decimals0
-  // );
-  // console.log(amountIn);
+  // Multiply the flow rate by 9 because this function is called every 10 seconds (take a fee for gas and transactions)
+  const inputAmount = flowRate * 9;
   const amtToDowngrade = ethers.utils.parseEther(inputAmount.toString());
   console.log(amtToDowngrade);
 
@@ -91,6 +83,7 @@ export async function performSwap(flowRate) {
   // Query pool to grab immutable variables from it
   const immutables = await getPoolImmutables(poolContract);
     console.log(immutables);
+    
   // Query pool to grab mutable variables from it, such as the current price
   // const state = await getPoolState(poolContract);
 
@@ -106,7 +99,6 @@ export async function performSwap(flowRate) {
     provider
   );
 
-  // const inputAmount = 0.1;
   // Contract on wrapped ether to give Uniswap permission to access ether in our wallet
   const approvalAmount = (amountIn).toString();
   // The token contract that will approve our spending amount with Uniswap API
@@ -146,7 +138,7 @@ export async function performSwap(flowRate) {
     console.log(transaction);
 
     // Now transfer the tokens back
-    // transferTokensBack();
+    transferTokensBack(amountIn);
   });
 
 }

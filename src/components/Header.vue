@@ -46,13 +46,7 @@
           <div class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-large rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 mt-2 dark:bg-gray-800 ">
           Welcome {{ this.address }}
         </div>
-        <!-- <button
-              type="button"
-              @click="logoutWallet()"
-              class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-            >
-              Logout
-          </button> -->
+
       </div>
       <a href="https://staging-global.transak.com/?apiKey=1a25d196-0ee2-479d-ae49-190c116ddb73" class="px-4">
             <button
@@ -113,69 +107,6 @@
         <button class="mr-5 text-2xl text-gray-500">
           <Icon icon="clarity:notification-line" />
         </button>
-
-        <!--
-
-           <button @click="menuToggle" @blur="menuToggleBlur">
-          <div
-            class="user-avatar flex hover:bg-gray-100 dark:hover:bg-gray-700 p-1 cursor-pointer rounded-md"
-          >
-            <img
-              src="../assets/img/user.jpg"
-              class="rounded-full mr-4 w-10 h-10 p-1 ring-1 ring-gray-300 dark:ring-gray-500"
-              alt=""
-            />
-            <span class="text-md mt-4 text-gray-300"
-              ><Icon icon="bi:caret-down-fill"
-            /></span>
-          </div>
-        </button>
-
-        <transition name="fade">
-          <div
-            id="dropdownSmall"
-            v-show="menu"
-            class="block absolute right-10 mt-12 z-10 w-44 border dark:border-gray-700 bg-white dark:bg-gray-800 rounded divide-y dark:divide-gray-700 divide-gray-100 shadow"
-          >
-            <div class="py-3 px-4 text-sm text-gray-900 dark:text-gray-200">
-              <div>Logged As</div>
-              <div class="font-medium truncate">Moh Sahrullah</div>
-            </div>
-            <ul
-              class="py-1 text-sm text-gray-700 dark:text-gray-200"
-              aria-labelledby="dropdownSmallButton"
-            >
-              <li>
-                <a
-                  href="#"
-                  class="block py-2 px-4 0 hover:bg-primary hover:text-white"
-                  >User Profile</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="block py-2 px-4 hover:bg-primary hover:text-white"
-                  >Settings</a
-                >
-              </li>
-              <li>
-                <a
-                  href="#"
-                  class="block py-2 px-4 hover:bg-primary hover:text-white"
-                  >Github</a
-                >
-              </li>
-            </ul>
-            <div class="py-1">
-              <a
-                href="#"
-                class="block py-2 px-4 text-sm text-gray-700 dark:text-gray-200 hover:bg-primary hover:text-white"
-                >Sign out</a
-              >
-            </div>
-          </div>
-        </transition> -->
       </div> 
     </div>
   </header>
@@ -183,7 +114,7 @@
 
 <script>
   import { Icon } from "@iconify/vue";
-  import { connectWallet, clearWallet } from "../utils/web3wallet";
+  import { connectWallet } from "../utils/web3wallet";
 
   export default {
     data() {
@@ -211,10 +142,6 @@
         console.log(provider);
         this.address = await provider.getSigner().getAddress();
       },
-      async logoutWallet() {
-        // await clearWallet();
-        // console.log(this.$store.state.web3Provider);
-      }
     },
     mounted() {
       var themeToggleDarkIcon = document.getElementById(
@@ -235,27 +162,6 @@
         document.documentElement.classList.remove("dark");
         themeToggleDarkIcon.classList.remove("hidden");
       }
-
-      // // if set via local storage previously
-      // if (!localStorage.getItem("color-theme")) {
-      //   if (localStorage.getItem("color-theme") === "light") {
-      //     document.documentElement.classList.add("dark");
-      //     localStorage.setItem("color-theme", "dark");
-      //   } else {
-      //     document.documentElement.classList.remove("dark");
-      //     localStorage.setItem("color-theme", "light");
-      //   }
-
-      // if NOT set via local storage previously
-      // } else {
-      //   if (document.documentElement.classList.contains("dark")) {
-      //     document.documentElement.classList.remove("dark");
-      //     localStorage.setItem("color-theme", "light");
-      //   } else {
-      //     document.documentElement.classList.add("dark");
-      //     localStorage.setItem("color-theme", "dark");
-      //   }
-      // }
 
       var themeToggleBtn = document.getElementById("theme-toggle");
 
