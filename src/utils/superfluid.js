@@ -1,6 +1,8 @@
 import { Framework } from "@superfluid-finance/sdk-core";
 import { ethers } from "ethers";
 import { store } from "../store";
+import { customHttpProvider } from "./config";
+import { performSwap } from './swap';
 
 const NETWORK_NAME = "mumbai";
 const SUPER_TOKEN_NAME = "MATICx";
@@ -8,7 +10,7 @@ const SUPER_TOKEN_NAME = "MATICx";
 // Will perform the swap
 const RECIPIENT = "0x8ac29b4a1f99E118E2f23F705507442C2F6Ba9d5";
 
-export async function createNewFlow(flowRate) {
+export async function createNewFlow(fromToken = "fUSDC", toToken = SUPER_TOKEN_NAME, flowRate) {
     const web3ModalProvider = store.state.web3Provider;
     const senderAddress = await web3ModalProvider.getSigner().getAddress();
 
@@ -19,7 +21,7 @@ export async function createNewFlow(flowRate) {
 
     const signer = sf.createSigner({ web3Provider: web3ModalProvider });
 
-    const tokenxContract = await sf.loadSuperToken(SUPER_TOKEN_NAME);
+    const tokenxContract = await sf.loadSuperToken(fromToken);
     const tokenx = tokenxContract.address;
 
     try {
@@ -27,23 +29,29 @@ export async function createNewFlow(flowRate) {
           flowRate: flowRate,
           receiver: RECIPIENT,
           superToken: tokenx,
-    });
+       });
 
-    console.log("Creating your stream...");
+      console.log("Creating your stream...");
 
-    const result = await createFlowOperation.exec(signer);
-    console.log(result);
+      const result = await createFlowOperation.exec(signer);
+      console.log(result);
 
-    console.log(
-        `Congrats - you've just created a money stream!
-    View Your Stream At: https://app.superfluid.finance/dashboard/${RECIPIENT}
-    Network: ${NETWORK_NAME}
-    Super Token: ${SUPER_TOKEN_NAME}
-    Sender: ${senderAddress}
-    Receiver: ${RECIPIENT},
-    FlowRate: ${flowRate}
-    `
-    );
+      console.log(
+          `Congrats - you've just created a money stream!
+      View Your Stream At: https://app.superfluid.finance/dashboard/${RECIPIENT}
+      Network: ${NETWORK_NAME}
+      Super Token: ${fromToken}
+      Sender: ${senderAddress}
+      Receiver: ${RECIPIENT},
+      FlowRate: ${flowRate}
+      `
+      );
+
+      // Start process to swap tokens continuously
+        await performSwap();
+      // Send swapped amount back to original wallet
+          
+
     } catch (error) {
     console.log(
         "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
@@ -52,7 +60,7 @@ export async function createNewFlow(flowRate) {
     }
 }
 
-export async function updateExistingFlow(flowRate) {
+export async function updateExistingFlow(tokenType, flowRate) {
     const web3ModalProvider = store.state.web3Provider;
     const senderAddress = await web3ModalProvider.getSigner().getAddress();
 
@@ -63,7 +71,7 @@ export async function updateExistingFlow(flowRate) {
 
     const signer = sf.createSigner({ web3Provider: web3ModalProvider });
 
-    const tokenxContract = await sf.loadSuperToken(SUPER_TOKEN_NAME);
+    const tokenxContract = await sf.loadSuperToken(tokenType);
     const tokenx = tokenxContract.address;
   
     try {
@@ -82,7 +90,7 @@ export async function updateExistingFlow(flowRate) {
         `Congrats - you've just updated a money stream!
       View Your Stream At: https://app.superfluid.finance/dashboard/${RECIPIENT}
       Network: ${NETWORK_NAME}
-      Super Token: ${SUPER_TOKEN_NAME}
+      Super Token: ${tokenType}
       Sender: ${senderAddress}
       Receiver: ${RECIPIENT},
       New FlowRate: ${flowRate}
@@ -96,7 +104,7 @@ export async function updateExistingFlow(flowRate) {
     }
 }
 
-export async function deleteFlow() {
+export async function deleteFlow(tokenType) {
     const web3ModalProvider = store.state.web3Provider;
     const senderAddress = await web3ModalProvider.getSigner().getAddress();
 
@@ -107,7 +115,7 @@ export async function deleteFlow() {
 
     const signer = sf.createSigner({ web3Provider: web3ModalProvider });
 
-    const tokenxContract = await sf.loadSuperToken(SUPER_TOKEN_NAME);
+    const tokenxContract = await sf.loadSuperToken(tokenType);
     const tokenx = tokenxContract.address;
   
     try {
@@ -124,7 +132,7 @@ export async function deleteFlow() {
       console.log(
         `Congrats - you've just deleted your money stream!
          Network: ${NETWORK_NAME}
-         Super Token: ${SUPER_TOKEN_NAME}
+         Super Token: ${tokenType}
          Sender: ${senderAddress}
          Receiver: ${RECIPIENT}
       `

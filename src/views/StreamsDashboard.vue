@@ -43,7 +43,7 @@
         <button
             type="button"
             @click="createStream()"
-            class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+            class="py-1.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
             >
             Create stream
         </button>
@@ -64,14 +64,6 @@
     >
       Update stream
     </button> -->
-
-        <button
-            type="button"
-            @click="deleteStream()"
-            class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-            >
-            Delete stream
-        </button>
 
       <!-- <button
       type="button"
@@ -103,7 +95,8 @@
               <th scope="col" class="uppercase px-6 py-3">Date Started</th>
               <th scope="col" class="uppercase px-6 py-3">Flow Rate</th>
               <th scope="col" class="uppercase px-6 py-3">Status</th>
-              <th scope="col" class="uppercase px-6 py-3"></th>
+              <th scope="col" class="uppercase px-6 py-3">Update</th>
+              <th scope="col" class="uppercase px-6 py-3">Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -119,7 +112,7 @@
                 {{ items.datetime }}
               </td>
               <td class="px-6 py-4">
-                {{ items.amount }}
+                {{ items.flowRate }}
               </td>
               <td class="px-6 py-4">
                 <span
@@ -132,7 +125,7 @@
                   class="text-purple-800 bg-purple-300 px-3 py-1 rounded-md"
                   v-else-if="items.statusTransaction == 'progress'"
                 >
-                  {{ items.statusTransaction }}
+                  in progress
                 </span>
                 <span
                   class="text-red-800 bg-red-300 px-3 py-1 rounded-md"
@@ -141,8 +134,36 @@
                   {{ items.statusTransaction }}
                 </span>
               </td>
-              <td class="px-6 py-4">
-                {{ items.amount }}
+              <td class="px-6 py-4 flex flew-row">
+                <div
+                    class="input-box border dark:bg-gray-900 dark:border-gray-700 rounded-md mr-5 w-4/5 box-border lg:flex md:flex focus-within:bg-gray-100 dark:focus-within:bg-gray-700"
+                    >
+                    <span class="text-3xl p-2 text-gray-400"
+                        ><Icon icon="bx:dollar-circle"
+                    /></span>
+                    <input
+                        type="text"
+                        placeholder="Enter new rate per month"
+                        class="p-3 w-full bg-white dark:bg-gray-900 rounded-md outline-none focus:bg-gray-100 dark:focus:bg-gray-700"
+                    />
+                </div>
+                <button
+                    type="button"
+                    class="mt-2 mr-2 px-2 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                >
+                    <span class="text-md text-gray-400">
+                        <Icon icon="bi:check-lg"/>
+                    </span>
+                </button>
+              </td>
+              <td lass="px-6 py-4 mt-4">
+                <button
+                    type="button"
+                    @click="deleteStream(items.superToken)"
+                    class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                    >
+                    Delete stream
+                </button>
               </td>
             </tr>
           </tbody>
@@ -181,14 +202,14 @@
       DropdownSelect
     },
     methods: {
-      async createStream() {
-        createNewFlow(10000000000);
+      async createStream(tokenType, amount) {
+        createNewFlow(tokenType, amount);
       },
-      async updateStream() {
-        updateExistingFlow(10000000000);
+      async updateStream(tokenType, amount) {
+        updateExistingFlow(tokenType, amount);
       },
-      async deleteStream() {
-        deleteFlow();
+      async deleteStream(tokenType) {
+        deleteFlow(tokenType);
       },
       async swapTokens() {
         performSwap();
@@ -222,7 +243,15 @@
             border: "1px solid gray",
             width: 200
         },
-         tableTransaction: [],
+         tableTransaction: [
+            {
+                transaction: "MATIC",
+                superToken: "MATICx",
+                datetime: "May 2, 2022",
+                flowRate: "$10/month",
+                statusTransaction: "progress",
+            },
+         ],
       };
     },
     mounted() {},
