@@ -60,12 +60,12 @@
           </div>
         </div>
 
-        <div class="block p-2 w-full">
+        <!-- <div class="block p-2 w-full">
           <p class="font-semibold text-gray-900 dark:text-gray-200 text-xl">
             $5000
           </p>
           <h2 class="font-normal text-gray-400 text-md mt-1">P/L Last 24 hours</h2>
-        </div>
+        </div> -->
       </div>
  
       <div
@@ -113,9 +113,9 @@
         class="mt-2 bg-white dark:bg-gray-800 p-5 w-full rounded-md box-border shadow"
       >
         <h2 class="font-bold text-lg text-gray-800 dark:text-gray-200">
-          5,355
+          {{currentMaticPriceData.value}}
         </h2>
-        <p class="text-gray-400 font-lexend font-normal">Balance</p>
+        <p class="text-gray-400 font-lexend font-normal">MATIC PRICE</p>
         <span class="float-right">
           <h2 class="text-green-500 -mt-12 flex">
             <span class="mr-2"> 47.9% </span
@@ -234,11 +234,44 @@
 <script>
   // @ is an alias to /src
   import { Icon } from "@iconify/vue";
+  import redstone from 'redstone-api';
 
   export default {
-    name: "Dashboard",
+    name: "SupervestDashboard",
+    methods: {
+      async getMaticPrice() { 
+        var today = new Date();
+        var maticPrice = [];
+        for (let i = 7; i > 0; i--) {
+          var date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
+          // this.optionsVisitor.xaxis.categories.push(date);
+          const priceData = await redstone.getHistoricalPrice('MATIC', {
+              date: date,
+              verifySignature: true,
+            });
+          maticPrice.push(priceData.value);
+            // this.weeklyMaticPriceData.push(await redstone.getHistoricalPrice('MATIC', {
+            //   date: date,
+            //   verifySignature: true,
+            // }).value);
+        }
+        // var lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+        this.currentMaticPriceData = await redstone.getHistoricalPrice('MATIC', {
+          verifySignature: true,
+        });
+        // console.log(maticPrice);
+        this.seriesVisitor[0].data = maticPrice
+      }
+    },
+    async mounted() {
+      // console.log("GET");
+      await this.getMaticPrice();
+    },
     data() {
       return {
+        currentMaticPriceData: {},
+        weeklyMaticPriceData: [{
+            data: [] }],
         walletAddress: "0x1dCF1Ec2ED51A4ffd1b3435a5d5A2EEdf1A9441A",
         // for more guide apexchart.js
         // https://apexcharts.com/docs/chart-types/line-chart/
@@ -246,7 +279,7 @@
         // chart data area
         optionsArea: {
           xaxis: {
-            categories: [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022],
+            categories: [],
           },
           fontFamily: "Segoe UI, sans-serif",
           stroke: {
@@ -256,9 +289,9 @@
           markers: {
             size: 0,
           },
-          yaxis: {
-            show: false,
-          },
+          // yaxis: {
+          //   show: false,
+          // },
           fill: {
             type: "gradient",
             gradient: {
@@ -274,56 +307,56 @@
           fontFamily: "lexend, sans-serif",
         },
 
-        seriesArea: [
-          {
-            name: "Revenue",
-            data: [30, 40, 45, 50, 49, 60, 70, 91],
-          },
-          {
-            name: "Revenue (Previous period)",
-            data: [20, 34, 45, 55, 79, 87, 90, 98],
-          },
-        ],
-        optionsBar: {
-          chart: {
-            toolbar: {
-              show: false,
-            },
-            zoom: {
-              enabled: false,
-            },
-            sparkline: {
-              enabled: true,
-            },
-          },
-          legend: {
-            show: false,
-          },
-          xaxis: {
-            show: false,
-          },
-          yaxis: {
-            show: false,
-          },
-          colors: ["#4f46e5", "#DC2626"],
-          dataLabels: {
-            enabled: false,
-          },
-          stroke: {
-            curve: "straight",
-          },
-        },
+        // seriesArea: [
+        //   {
+        //     name: "Revenue",
+        //     data: [30, 40, 45, 50, 49, 60, 70, 91],
+        //   },
+        //   {
+        //     name: "Revenue (Previous period)",
+        //     data: [20, 34, 45, 55, 79, 87, 90, 98],
+        //   },
+        // ],
+        // optionsBar: {
+        //   chart: {
+        //     toolbar: {
+        //       show: false,
+        //     },
+        //     zoom: {
+        //       enabled: false,
+        //     },
+        //     sparkline: {
+        //       enabled: true,
+        //     },
+        //   },
+        //   legend: {
+        //     show: false,
+        //   },
+        //   xaxis: {
+        //     show: false,
+        //   },
+        //   yaxis: {
+        //     show: false,
+        //   },
+        //   colors: ["#4f46e5", "#DC2626"],
+        //   dataLabels: {
+        //     enabled: false,
+        //   },
+        //   stroke: {
+        //     curve: "straight",
+        //   },
+        // },
 
-        seriesBar: [
-          {
-            name: "Product 1",
-            data: [30, 40, 45, 50, 49, 60, 70, 91],
-          },
-          {
-            name: "Product 2",
-            data: [20, 34, 45, 55, 79, 87, 90, 98],
-          },
-        ],
+        // seriesBar: [
+        //   {
+        //     name: "Product 1",
+        //     data: [30, 40, 45, 50, 49, 60, 70, 91],
+        //   },
+        //   {
+        //     name: "Product 2",
+        //     data: [20, 34, 45, 55, 79, 87, 90, 98],
+        //   },
+        // ],
         optionsVisitor: {
           chart: {
             toolbar: {
@@ -341,6 +374,7 @@
           },
           xaxis: {
             show: false,
+            // categories: []
           },
           yaxis: {
             show: false,
@@ -365,22 +399,22 @@
 
         seriesVisitor: [
           {
-            name: "Visitor ",
-            data: [30, 40, 45, 50, 49, 60, 70, 91],
+            name: "MATIC PRICE ",
+            data: [0, 0, 0, 0, 0, 0, 0, 0],
           },
         ],
-        optionsDonut: {
-          chart: {
-            type: "donut",
-          },
-          legend: false,
-          dataLabels: {
-            enabled: false,
-          },
-          labels: ["admin", "SuperAdmin", "User", "Costumer"],
-        },
+        // optionsDonut: {
+        //   chart: {
+        //     type: "donut",
+        //   },
+        //   legend: false,
+        //   dataLabels: {
+        //     enabled: false,
+        //   },
+        //   labels: ["admin", "SuperAdmin", "User", "Costumer"],
+        // },
 
-        seriesDonut: [20, 15, 63, 83],
+        // seriesDonut: [20, 15, 63, 83],
         tableTransaction: [
         ],
       };
@@ -389,6 +423,5 @@
     components: {
       Icon,
     },
-    mounted() {},
   };
 </script>

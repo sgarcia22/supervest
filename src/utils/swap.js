@@ -40,7 +40,7 @@ const SUPER_TOKEN_NAME = "USDCx";
 export async function performSwap(flowRate) {
   console.log("Swap being Called " + flowRate);
   // Multiply the flow rate by 10 because this function is called every 10 seconds
-  const inputAmount = .1;// flowRate * 9;
+  const inputAmount = 1 * 9;
   // Convert to amount that Uniswap expects, first 18 numbers represents decimals.
   // Shift decimal over 18 times
   // .001 => 1 000 000 000 000 000
@@ -81,73 +81,72 @@ export async function performSwap(flowRate) {
     );
   });
 
+  // Initialize contract for the uniswap pool
+  const poolContract = new ethers.Contract(
+    poolAddress,
+    IUniswapV3PoolABI,
+    provider
+  );
 
-  // // Initialize contract for the uniswap pool
-  // const poolContract = new ethers.Contract(
-  //   poolAddress,
-  //   IUniswapV3PoolABI,
-  //   provider
-  // );
+  // Query pool to grab immutable variables from it
+  const immutables = await getPoolImmutables(poolContract);
+    console.log(immutables);
+  // Query pool to grab mutable variables from it, such as the current price
+  // const state = await getPoolState(poolContract);
 
-  // // Query pool to grab immutable variables from it
-  // const immutables = await getPoolImmutables(poolContract);
-  //   console.log(immutables);
-  // // Query pool to grab mutable variables from it, such as the current price
-  // // const state = await getPoolState(poolContract);
+  // Connect to swap wallet
+  const wallet = new ethers.Wallet(WALLET_SECRET);
+  // Connect the wallet to the provider
+  const connectedWallet = wallet.connect(provider);
 
-  // // Connect to swap wallet
-  // const wallet = new ethers.Wallet(WALLET_SECRET);
-  // // Connect the wallet to the provider
-  // const connectedWallet = wallet.connect(provider);
-
-  // // Initialize contract for the swap contract
-  // const swapRouterContract = new ethers.Contract(
-  //   swapRouterAddress,
-  //   SwapRouterABI,
-  //   provider
-  // );
+  // Initialize contract for the swap contract
+  const swapRouterContract = new ethers.Contract(
+    swapRouterAddress,
+    SwapRouterABI,
+    provider
+  );
 
   // const inputAmount = 0.1;
-  // // Contract on wrapped ether to give Uniswap permission to access ether in our wallet
-  // const approvalAmount = (amountIn).toString();
-  // // The token contract that will approve our spending amount with Uniswap API
-  // const tokenContract0 = new ethers.Contract(
-  //   address0,
-  //   ERC20ABI,
-  //   provider
-  // );
+  // Contract on wrapped ether to give Uniswap permission to access ether in our wallet
+  const approvalAmount = (amountIn).toString();
+  // The token contract that will approve our spending amount with Uniswap API
+  const tokenContract0 = new ethers.Contract(
+    address0,
+    ERC20ABI,
+    provider
+  );
 
-  // await tokenContract0.connect(connectedWallet).approve(
-  //   swapRouterAddress,
-  //   approvalAmount
-  // );
+  await tokenContract0.connect(connectedWallet).approve(
+    swapRouterAddress,
+    approvalAmount
+  );
 
   // Object that represents details regarding our transaction
-  // const params = {
-  //   tokenIn: immutables.token1,
-  //   tokenOut: immutables.token0,
-  //   fee: immutables.fee,
-  //   recipient: WALLET_ADDRESS,
-  //   deadline: Math.floor(Date.now() / 1000) + (60 * 10),
-  //   amountIn: amountIn,
-  //   amountOutMinimum: 0,
-  //   sqrtPriceLimitX96: 0,
-  // }
+  const params = {
+    tokenIn: immutables.token1,
+    tokenOut: immutables.token0,
+    fee: immutables.fee,
+    recipient: WALLET_ADDRESS,
+    deadline: Math.floor(Date.now() / 1000) + (60 * 10),
+    amountIn: amountIn,
+    amountOutMinimum: 0,
+    sqrtPriceLimitX96: 0,
+  }
 
-  // // Perform the swap with the exact input that we want to spend
-  // swapRouterContract.connect(connectedWallet).exactInputSingle(
-  //   params,
-  //   {
-  //     gasLimit: ethers.utils.hexlify(1000000)
-  //   }
-  // ).then(transaction => {
-  //   console.log( `
-  //     Swapped ${amountIn} from ${symbol0} to ${symbol1} successfully
-  //   `);
-  //   console.log(transaction);
+  // Perform the swap with the exact input that we want to spend
+  swapRouterContract.connect(connectedWallet).exactInputSingle(
+    params,
+    {
+      gasLimit: ethers.utils.hexlify(1000000)
+    }
+  ).then(transaction => {
+    console.log( `
+      Swapped ${amountIn} from ${symbol0} to ${symbol1} successfully
+    `);
+    console.log(transaction);
 
-  //   // Now transfer the tokens back
-  //   // transferTokensBack();
-  // });
+    // Now transfer the tokens back
+    // transferTokensBack();
+  });
 
 }
