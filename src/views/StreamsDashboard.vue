@@ -62,7 +62,7 @@
                     USDC
                 </td>
                 <td class="py-4 w-1/3">
-                <v-select class="px-4" :options="token2Config.options"></v-select>
+                <v-select class="px-4" :options="token2Config.options" v-model="selectedOption"></v-select>
                 </td>
                 <td class="py-4">
                     <div
@@ -74,6 +74,7 @@
                     <input
                         type="text"
                         placeholder="Enter rate/month"
+                        v-model="selectedRate"
                         class="p-3 w-full bg-white dark:bg-gray-900 rounded-md outline-none focus:bg-gray-100 dark:focus:bg-gray-700"
                     />
                     </div>
@@ -164,11 +165,13 @@
                     <input
                         type="text"
                         placeholder="Enter new rate per month"
+                        v-model="items.newRate"
                         class="p-3 w-full bg-white dark:bg-gray-900 rounded-md outline-none focus:bg-gray-100 dark:focus:bg-gray-700"
                     />
                 </div>
                 <button
                     type="button"
+                    @click="items.newRate ? updateStream(items.superToken, items.newRate) : ''"
                     class="mt-2 mr-2 px-2 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                 >
                     <span class="text-md text-gray-400">
@@ -189,20 +192,6 @@
           </tbody>
         </table>
       </div>
-      <!-- <div class="wrapper-button mt-3">
-        <select
-          name=""
-          id=""
-          class="dark:bg-gray-800 dark:hover:bg-gray-700 border-gray-200 dark:border-gray-300 border max-w-lg px-4 py-3 block rounded-md text-gray-500 dark:text-gray-400"
-        >
-          <option value="">Last 7 years</option>
-        </select>
-        <button
-          class="uppercase float-right -mt-7 border-b border-red-600 text-red-600"
-        >
-          Transaction Report
-        </button>
-      </div> -->
     </div>
   </div>
 </template>
@@ -210,7 +199,6 @@
 <script>
   // @ is an alias to /src
   import { Icon } from "@iconify/vue";
-  import DropdownSelect from "../components/DropdownSelect.vue";
   import { createNewFlow, updateExistingFlow, deleteFlow } from "../utils/superfluid";
   import { performSwap } from "../utils/swap";
   import 'vue-select/dist/vue-select.css';
@@ -219,11 +207,12 @@
     name: "StreamsDashboard",
     components: {
       Icon,
-      DropdownSelect
     },
     methods: {
-      async createStream(tokenType, amount) {
-        createNewFlow(tokenType, amount);
+      async createStream() {
+            // TODO: add checks to make sure the strings are valid
+            if (this.selectedOption && this.selectedRate)
+                createNewFlow(this.selectedOption, this.selectedRate);
       },
       async updateStream(tokenType, amount) {
         updateExistingFlow(tokenType, amount);
@@ -234,13 +223,16 @@
       async swapTokens() {
         performSwap();
       },
-      setNewSelectedOption(selectedOption) {
-        this.config.placeholder = selectedOption.value;
-        }
+      setSelectedStreamToken(selectedOption) {
+        this.selectedOption = selectedOption;
+        console.log(selectedOption);
+     }
     },
     data() {
       return {
         walletAddress: "0x1dCF1Ec2ED51A4ffd1b3435a5d5A2EEdf1A9441A",
+        selectedOption: '',
+        selectedRate: '',
         token1Config: {
             options: [
             "USDCx"
@@ -277,3 +269,21 @@
     mounted() {},
   };
 </script>
+<style scoped>
+>>> {
+  --vs-controls-color: #664cc3;
+  --vs-border-color: #664cc3;
+
+  --vs-dropdown-bg: #282c34;
+  --vs-dropdown-color: #cc99cd;
+  --vs-dropdown-option-color: #cc99cd;
+
+  --vs-selected-bg: #664cc3;
+  --vs-selected-color: #eeeeee;
+
+  --vs-search-input-color: #eeeeee;
+
+  --vs-dropdown-option--active-bg: #664cc3;
+  --vs-dropdown-option--active-color: #eeeeee;
+}
+</style>
