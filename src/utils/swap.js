@@ -4,6 +4,7 @@ const { abi: SwapRouterABI} = require('@uniswap/v3-periphery/artifacts/contracts
 const { getPoolImmutables, getPoolState } = require('./helpers');
 const ERC20ABI = require('./abi.json');
 import { customHttpProvider } from "./config";
+import { transferTokensBack } from './transfer';
 
 // require('dotenv').config();
 // const INFURA_URL_TESTNET = process.env.VUE_APP_INFURA_URL_TESTNET;
@@ -105,7 +106,8 @@ export async function performSwap(flowRate) {
       gasLimit: ethers.utils.hexlify(1000000)
     }
   ).then(transaction => {
-    console.log(transaction)
+    console.log(transaction);
+
   });
 
 }

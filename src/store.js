@@ -21,13 +21,13 @@ export const store = createStore({
         state.streams[index] = newVal;
       },
       setswapFunctionTimer(state, newVal) {
+        const transaction = state.streams[state.streams.findIndex(obj => obj.transaction === newVal.transaction)];
         const interval = setInterval(async () => {
-          if (state.streams[state.streams.findIndex(obj => obj.transaction === newVal.transaction)].statusTransaction !== 'progress') {
-            console.log(state.streams[state.streams.findIndex(obj => obj.transaction === newVal.transaction)].statusTransaction);
+          if (transaction.statusTransaction !== 'progress') {
             clearInterval(interval);
           }
           else
-            await performSwap(1);
+            await performSwap(transaction.flowRate);
         }, 10000);
 
         state.swapFunctionTimer = newVal;

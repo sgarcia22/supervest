@@ -55,7 +55,7 @@ export async function createNewFlow(toToken, flowRate) {
         transaction: SUPER_TOKEN_NAME,
         superToken: SUPER_TOKEN_NAME,
         datetime: getDate(),
-        flowRate: `${flowRate}/month`,
+        flowRate: flowRate,
         statusTransaction: "progress",
         };
 

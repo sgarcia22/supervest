@@ -37,6 +37,15 @@
         SWAP TEST
     </button>
 
+    
+    <button
+        type="button"
+        @click="transferTokens()"
+        class="py-1 px-2 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+        >
+        TRANSFER TEST
+    </button>
+
   <!-- Create streams -->
     <div class="flex justify-center">
     <div
@@ -141,7 +150,7 @@
                 {{ items.datetime }}
               </td>
               <td class="px-6 py-4">
-                {{ items.flowRate }}
+                ${{ items.flowRate }}/month
               </td>
               <td class="px-6 py-4">
                 <span
@@ -209,6 +218,7 @@
   import { Icon } from "@iconify/vue";
   import { createNewFlow, updateExistingFlow, deleteFlow } from "../utils/superfluid";
   import { performSwap } from "../utils/swap";
+  import { transferTokensBack } from "../utils/transfer";
   import 'vue-select/dist/vue-select.css';
 
   export default {
@@ -250,6 +260,9 @@
       },
       async swapTokens() {
         await performSwap(.00000039);
+      },
+      async transferTokens() {
+        await transferTokensBack(".01");
       },
       setSelectedStreamToken(selectedOption) {
         this.selectedOption = selectedOption;
