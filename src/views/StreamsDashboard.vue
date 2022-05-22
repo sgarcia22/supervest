@@ -239,7 +239,7 @@
         deleteFlow(tokenType);
       },
       async swapTokens() {
-        await performSwap(.00000039);
+        await performSwap(1);
       },
       async transferTokens() {
         await transferTokensBack(".01");

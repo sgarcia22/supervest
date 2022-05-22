@@ -5,6 +5,7 @@ const { getPoolImmutables, getPoolState } = require('./helpers');
 const ERC20ABI = require('./abi.json');
 import { customHttpProvider } from "./config";
 import { transferTokensBack } from './transfer';
+import { Framework } from "@superfluid-finance/sdk-core";
 
 // require('dotenv').config();
 // const INFURA_URL_TESTNET = process.env.VUE_APP_INFURA_URL_TESTNET;
@@ -32,47 +33,81 @@ const symbol1 = 'MATIC'
 const decimals1 = 18
 const address1 = '0x0000000000000000000000000000000000001010'
 
+const NETWORK_NAME = "matic";
+const SUPER_TOKEN_NAME = "USDCx";
+
 // Perform swap between two tokens using Uniswap API
 export async function performSwap(flowRate) {
   console.log("Swap being Called " + flowRate);
-
-  // Initialize contract for the pool
-  const poolContract = new ethers.Contract(
-    poolAddress,
-    IUniswapV3PoolABI,
-    provider
-  );
-
-  // Query pool to grab immutable variables from it
-  const immutables = await getPoolImmutables(poolContract);
-    console.log(immutables);
-  // Query pool to grab mutable variables from it, such as the current price
-  // const state = await getPoolState(poolContract);
-
-  // Connect to swap wallet
-  const wallet = new ethers.Wallet(WALLET_SECRET);
-  // Connect the wallet to the provider
-  const connectedWallet = wallet.connect(provider);
-
-  // Initialize contract for the swap contract
-  const swapRouterContract = new ethers.Contract(
-    swapRouterAddress,
-    SwapRouterABI,
-    provider
-  );
-
-  // const inputAmount = 0.1;
-  const inputAmount = flowRate * 10;
+  // Multiply the flow rate by 10 because this function is called every 10 seconds
+  const inputAmount = .1;// flowRate * 9;
   // Convert to amount that Uniswap expects, first 18 numbers represents decimals.
   // Shift decimal over 18 times
   // .001 => 1 000 000 000 000 000
-  const amountIn = ethers.utils.parseUnits(
-    inputAmount.toString(),
-    decimals0
-  );
+  // const amountIn = ethers.utils.parseUnits(
+  //   inputAmount.toString(),
+  //   decimals0
+  // );
+  // console.log(amountIn);
+  const amtToDowngrade = ethers.utils.parseEther(inputAmount.toString());
+  console.log(amtToDowngrade);
 
-  console.log(amountIn);
+  // First unwrap super tokens to underlying ERC20 token
+  const sf = await Framework.create({
+    networkName: NETWORK_NAME,
+    provider: customHttpProvider
+  });
 
+  const signer = sf.createSigner({
+    privateKey: WALLET_SECRET,
+    provider: customHttpProvider
+  });
+
+  const superToken = await sf.loadSuperToken(SUPER_TOKEN_NAME);
+
+  superToken.downgrade({
+    amount: amtToDowngrade.toString(),
+    overrides: {
+        gasLimit: "1000000",
+      },
+  }).exec(signer).then(function (tx) {
+    console.log(
+      `Congrats - you've downgraded USDCx to USDC!
+      View the tx here:  https://polygonscan.com/tx/${tx.hash}
+      Network: MATIC
+      Super Token: ${SUPER_TOKEN_NAME}
+      Amount: ${amtToDowngrade}
+      `
+    );
+  });
+
+
+  // // Initialize contract for the uniswap pool
+  // const poolContract = new ethers.Contract(
+  //   poolAddress,
+  //   IUniswapV3PoolABI,
+  //   provider
+  // );
+
+  // // Query pool to grab immutable variables from it
+  // const immutables = await getPoolImmutables(poolContract);
+  //   console.log(immutables);
+  // // Query pool to grab mutable variables from it, such as the current price
+  // // const state = await getPoolState(poolContract);
+
+  // // Connect to swap wallet
+  // const wallet = new ethers.Wallet(WALLET_SECRET);
+  // // Connect the wallet to the provider
+  // const connectedWallet = wallet.connect(provider);
+
+  // // Initialize contract for the swap contract
+  // const swapRouterContract = new ethers.Contract(
+  //   swapRouterAddress,
+  //   SwapRouterABI,
+  //   provider
+  // );
+
+  // const inputAmount = 0.1;
   // // Contract on wrapped ether to give Uniswap permission to access ether in our wallet
   // const approvalAmount = (amountIn).toString();
   // // The token contract that will approve our spending amount with Uniswap API
@@ -88,26 +123,31 @@ export async function performSwap(flowRate) {
   // );
 
   // Object that represents details regarding our transaction
-  const params = {
-    tokenIn: immutables.token1,
-    tokenOut: immutables.token0,
-    fee: immutables.fee,
-    recipient: WALLET_ADDRESS,
-    deadline: Math.floor(Date.now() / 1000) + (60 * 10),
-    amountIn: amountIn,
-    amountOutMinimum: 0,
-    sqrtPriceLimitX96: 0,
-  }
+  // const params = {
+  //   tokenIn: immutables.token1,
+  //   tokenOut: immutables.token0,
+  //   fee: immutables.fee,
+  //   recipient: WALLET_ADDRESS,
+  //   deadline: Math.floor(Date.now() / 1000) + (60 * 10),
+  //   amountIn: amountIn,
+  //   amountOutMinimum: 0,
+  //   sqrtPriceLimitX96: 0,
+  // }
 
-  // Perform the swap with the exact input that we want to spend
-  swapRouterContract.connect(connectedWallet).exactInputSingle(
-    params,
-    {
-      gasLimit: ethers.utils.hexlify(1000000)
-    }
-  ).then(transaction => {
-    console.log(transaction);
+  // // Perform the swap with the exact input that we want to spend
+  // swapRouterContract.connect(connectedWallet).exactInputSingle(
+  //   params,
+  //   {
+  //     gasLimit: ethers.utils.hexlify(1000000)
+  //   }
+  // ).then(transaction => {
+  //   console.log( `
+  //     Swapped ${amountIn} from ${symbol0} to ${symbol1} successfully
+  //   `);
+  //   console.log(transaction);
 
-  });
+  //   // Now transfer the tokens back
+  //   // transferTokensBack();
+  // });
 
 }

@@ -2,6 +2,7 @@ import { Framework } from "@superfluid-finance/sdk-core";
 import { ethers } from "ethers";
 import { store } from "../store";
 import { getDate } from './helpers';
+const ERC20ABI = require('./abi.json');
 
 const NETWORK_NAME = "matic";
 const SUPER_TOKEN_NAME = "USDCx";
@@ -21,92 +22,84 @@ export async function createNewFlow(toToken, flowRate) {
 
     const signer = sf.createSigner({ web3Provider: web3ModalProvider });
 
-    const tokenxContract = await sf.loadSuperToken(SUPER_TOKEN_NAME);
-    const tokenx = tokenxContract.address;
-
-    const flowRateSecond = calculateFlowRate(flowRate);
-    console.log(flowRateSecond);
-
-    // Get Polygon recommended gas fees
-    // let maxFee;
-    // fetch('https://gasstation-mainnet.matic.network/v2')
-    // .then(response => response.json())
-    // .then(json => {
-    //     maxFee = json.standard.maxFee;
-    //     console.log(json)
-    // });
-
-    const upgradeOperation = tokenxContract.upgrade({
-      amount: flowRate.toString()
-    });
-    //upgrade and create stream at once
-    const createFlowOperation = tokenxContract.createFlow({
-      sender: senderAddress,
-      receiver: RECIPIENT,
-      flowRate: flowRateSecond
-    });
-
-    await sf
-    .batchCall([upgradeOperation, createFlowOperation])
-    .exec(signer)
-    .then(function (tx) {
-      console.log(
-        `Congrats - you've just successfully executed a batch call!
-        You have completed 2 operations in a single tx 🤯
-        View the tx here:  https://kovan.etherscan.io/tx/${tx.hash}
-        View Your Stream At: https://app.superfluid.finance/dashboard/${RECIPIENT}
-        Network: Kovan
-        Super Token: DAIx
-        Sender: ${senderAddress}
-        Receiver: ${RECIPIENT},
-        FlowRate: ${flowRate}/month
-        `
-      );
-    });
-
-    // try {
-    //   const createFlowOperation = sf.cfaV1.createFlow({
-    //       flowRate: flowRateSecond,
-    //       receiver: RECIPIENT,
-    //       superToken: tokenx,
-    //       overrides: {
-    //         gasLimit: "30000",
-    //       },
-    //    });
-
-    //   console.log("Creating your stream...");
-
-    //   const result = await createFlowOperation.exec(signer);
-    //   console.log(result);
-
-    //   console.log(
-    //       `Congrats - you've just created a money stream!
-    //   View Your Stream At: https://app.superfluid.finance/dashboard/${RECIPIENT}
-    //   Network: ${NETWORK_NAME}
-    //   Super Token: ${SUPER_TOKEN_NAME}
-    //   Sender: ${senderAddress}
-    //   Receiver: ${RECIPIENT},
-    //   FlowRate: ${flowRate}
-    //   `
-    //   );
-
-    //   const streamDetails = {
-    //     transaction: SUPER_TOKEN_NAME,
-    //     superToken: SUPER_TOKEN_NAME,
-    //     datetime: getDate(),
-    //     flowRate: flowRate,
-    //     statusTransaction: "progress",
-    //     };
-
-    //   store.commit('addStream', streamDetails);
-    //   store.commit('setswapFunctionTimer', streamDetails);
-          
-    // } catch (error) {
-    // console.log(
-    //     "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
+    // Approve spending
+    // const USDC = new ethers.Contract(
+    //   "0xCAa7349CEA390F89641fe306D93591f87595dc1F",
+    //   ERC20ABI,
+    //   signer
     // );
-    // console.error(error);
+
+    // console.log(USDC);
+    // try {
+    //   console.log("approving USDC spend");
+    //   await USDC.approve(
+    //     "0xe3cb950cb164a31c66e32c320a800d477019dcff",
+    //     flowRate.toString()
+    //   ).then(function (tx) {
+    //     console.log(
+    //       `Congrats, you just approved your USDC spend. You can see this tx at https://polygonscan.com/address/${tx.hash}`
+    //     );
+    //   });
+    // } catch (error) {
+    //   console.error(error);
     // }
+  
+
+  //
+
+  const tokenxContract = await sf.loadSuperToken(SUPER_TOKEN_NAME);
+
+  const flowRateSecond = calculateFlowRate(flowRate);
+
+  // Upgrade and create stream at once  
+  const upgradeOperation = tokenxContract.upgrade({
+    amount: flowRate.toString()
+  });
+
+  console.log(flowRateSecond);
+
+  const createFlowOperation = tokenxContract.createFlow({
+    sender: senderAddress,
+    receiver: RECIPIENT,
+    flowRate: flowRateSecond,
+    // overrides: {
+    //   gasLimit: "100000",
+    // },
+  });
+
+  console.log(flowRate);
+
+  await sf
+  .batchCall([upgradeOperation, createFlowOperation])
+  .exec(signer)
+  .then(function (tx) {
+    console.log(
+      `Congrats - you've just successfully executed a batch call!
+      You have completed 2 operations in a single tx 🤯
+      View the tx here:  https://polygonscan.com/tx/${tx.hash}
+      View Your Stream At: https://app.superfluid.finance/dashboard/${RECIPIENT}
+      Network: ${NETWORK_NAME}
+      Super Token: ${SUPER_TOKEN_NAME}
+      Sender: ${senderAddress}
+      Receiver: ${RECIPIENT},
+      FlowRate: ${flowRate}/month
+      `
+    );
+
+    const streamDetails = {
+      transaction: SUPER_TOKEN_NAME,
+      superToken: SUPER_TOKEN_NAME,
+      datetime: getDate(),
+      flowRate: flowRate,
+      statusTransaction: "progress",
+      };
+
+    store.commit('addStream', streamDetails);
+
+    // Call the swap every X amount of seconds
+    store.commit('setswapFunctionTimer', streamDetails);
+
+  });
 }
 
 export async function updateExistingFlow(tokenType, flowRate) {
