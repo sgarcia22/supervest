@@ -30,52 +30,72 @@
     </div>
 
   <!-- Create streams -->
-
-    <h2 class="flex justify-center font-bold text-lg text-gray-800 dark:text-gray-200">
-    We currently only support the Polygon Network
-    </h2>
-
-    <div class="flex justify-center mt-4">
-        <div class="flex flex-row justify-between w-1/3">
-            <v-select class="w-1/2 px-4" :options="token1Config.options"></v-select>
-            <v-select class="w-1/2 px-4" :options="token2Config.options"></v-select>
-        </div>
-        <button
-            type="button"
-            @click="createStream()"
-            class="py-1.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+    <div class="flex justify-center">
+    <div
+        class="mt-4 p-5 w-3/5 rounded-md"
+        >
+        <h2 class="font-bold text-lg text-gray-800 dark:text-gray-200 flex justify-center">
+            Create a new stream
+        </h2>
+        <p class="text-gray-400 font-lexend font-normal flex justify-center">
+            We currently only support the Polygon Network
+        </p>
+        <div class="wrapping-table mt-10 ">
+            <table
+            class="w-full text-sm text-left text-gray-500 dark:text-gray-400 lg:overflow-auto overflow-x-scroll "
             >
-            Create stream
-        </button>
+            <thead
+                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 "
+            >
+                <tr>
+                <th scope="col" class="uppercase px-6 py-3">From</th>
+                <th scope="col" class="uppercase px-6 py-3">To</th>
+                <th scope="col" class="uppercase px-6 py-3">Flow Rate</th>
+                <th scope="col" class="uppercase px-6 py-3"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50"
+                >
+                <td class="px-6 py-4">
+                    USDC
+                </td>
+                <td class="py-4 w-1/3">
+                <v-select class="px-4" :options="token2Config.options"></v-select>
+                </td>
+                <td class="py-4">
+                    <div
+                    class="input-box border dark:bg-gray-900 dark:border-gray-700 rounded-md mr-5 w-full box-border lg:flex md:flex focus-within:bg-gray-100 dark:focus-within:bg-gray-700"
+                    >
+                    <span class="text-3xl p-2 text-gray-400"
+                        ><Icon icon="bx:dollar-circle"
+                    /></span>
+                    <input
+                        type="text"
+                        placeholder="Enter rate/month"
+                        class="p-3 w-full bg-white dark:bg-gray-900 rounded-md outline-none focus:bg-gray-100 dark:focus:bg-gray-700"
+                    />
+                    </div>
+                </td>
+                <td class="px-6 pt-1">
+                    <button
+                        type="button"
+                        @click="createStream()"
+                        class="py-1 px-2 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                        >
+                        Create stream
+                    </button>
+                </td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+        </div>
     </div>
 
-    <!-- <button
-      type="button"
-      @click="createStream()"
-      class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-    >
-      Create stream
-    </button>
-
-    <button
-      type="button"
-      @click="updateStream()"
-      class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-    >
-      Update stream
-    </button> -->
-
-      <!-- <button
-      type="button"
-      @click="swapTokens()"
-      class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-    >
-      Swap Tokens
-    </button> -->
-
-
     <div
-      class="mt-2 bg-white dark:bg-gray-800 p-5 w-full rounded-md box-border shadow"
+      class="mt-10 bg-white dark:bg-gray-800 p-5 w-full rounded-md box-border shadow"
     >
       <h2 class="font-bold text-lg text-gray-800 dark:text-gray-200">
         Streams
@@ -102,7 +122,7 @@
           <tbody>
             <tr
               class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50"
-              v-for="items in tableTransaction"
+              v-for="items in this.$store.state.streams"
               :key="items.transaction"
             >
               <td class="px-6 py-4">
@@ -223,9 +243,9 @@
         walletAddress: "0x1dCF1Ec2ED51A4ffd1b3435a5d5A2EEdf1A9441A",
         token1Config: {
             options: [
-            "option 1", "option 2", "option 3"
+            "USDCx"
             ],
-            placeholder: "First Token",
+            placeholder: "USDCx",
             backgroundColor: "#cde4f5",
             textColor: "black",
             borderRadius: "1.5em",
@@ -234,7 +254,7 @@
         },
         token2Config: {
             options: [
-            "option 1", "option 2", "option 3"
+            "MATIC", "ETHx", "WBTCx"
             ],
             placeholder: "Second Token",
             backgroundColor: "#cde4f5",

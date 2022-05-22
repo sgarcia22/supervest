@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { store } from "../store";
 import { customHttpProvider } from "./config";
 import { performSwap } from './swap';
+import { getDate } from './helpers';
 
 const NETWORK_NAME = "mumbai";
 const SUPER_TOKEN_NAME = "MATICx";
@@ -47,8 +48,17 @@ export async function createNewFlow(fromToken = "fUSDC", toToken = SUPER_TOKEN_N
       `
       );
 
+      store.commit('addStream',  {
+          transaction: fromToken,
+          superToken: fromToken,
+          datetime: getDate(),
+          flowRate: `${flowRate}/month`,
+          statusTransaction: "progress",
+          },
+        );
+
       // Start process to swap tokens continuously
-        await performSwap();
+        // await performSwap();
       // Send swapped amount back to original wallet
           
 
@@ -59,6 +69,7 @@ export async function createNewFlow(fromToken = "fUSDC", toToken = SUPER_TOKEN_N
     console.error(error);
     }
 }
+
 
 export async function updateExistingFlow(tokenType, flowRate) {
     const web3ModalProvider = store.state.web3Provider;
@@ -95,6 +106,16 @@ export async function updateExistingFlow(tokenType, flowRate) {
       Receiver: ${RECIPIENT},
       New FlowRate: ${flowRate}
       `
+      );
+
+      // Update Vue store
+      store.commit('alterStream',  {
+        transaction: tokenType,
+        superToken: tokenType,
+        datetime: store.state.streams.findIndex(obj => obj.transaction === tokenType).datetime,
+        flowRate: `${flowRate}/month`,
+        statusTransaction: "progress",
+        },
       );
     } catch (error) {
       console.log(
@@ -137,22 +158,34 @@ export async function deleteFlow(tokenType) {
          Receiver: ${RECIPIENT}
       `
       );
+
+
+      const storedTransaction = store.state.streams.findIndex(obj => obj.transaction === tokenType);
+      // Update Vue store
+      store.commit('alterStream',  {
+        transaction: tokenType,
+        superToken: tokenType,
+        datetime: storedTransaction.datetime,
+        flowRate: storedTransaction.flowRate,
+        statusTransaction: "cancelled",
+        },
+      );
     } catch (error) {
       console.error(error);
     }
   }
 
-function calculateFlowRate(amount) {
-    if (typeof Number(amount) !== "number" || isNaN(Number(amount)) === true) {
-        alert("You can only calculate a flowRate based on a number");
-        return;
-    } else if (typeof Number(amount) === "number") {
-        if (Number(amount) === 0) {
-        return 0;
-        }
-        const amountInWei = ethers.BigNumber.from(amount);
-        const monthlyAmount = ethers.utils.formatEther(amountInWei.toString());
-        const calculatedFlowRate = monthlyAmount * 3600 * 24 * 30;
-        return calculatedFlowRate;
-    }
-}
+// function calculateFlowRate(amountInDollars) {
+//     if (typeof Number(amountInDollars) !== "number" || isNaN(Number(amountInDollars)) === true) {
+//         alert("You can only calculate a flowRate based on a number");
+//         return;
+//     } else if (typeof Number(amountInDollars) === "number") {
+//         if (Number(amountInDollars) === 0) {
+//         return 0;
+//         }
+//         const amountInWei = ethers.BigNumber.from(amountInDollars);
+//         const monthlyAmount = ethers.utils.formatEther(amountInWei.toString());
+//         const calculatedFlowRate = monthlyAmount * 3600 * 24 * 30;
+//         return calculatedFlowRate;
+//     }
+// }
