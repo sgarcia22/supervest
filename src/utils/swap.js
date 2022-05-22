@@ -4,15 +4,15 @@ const { abi: SwapRouterABI} = require('@uniswap/v3-periphery/artifacts/contracts
 const { getPoolImmutables, getPoolState } = require('./helpers');
 const ERC20ABI = require('./abi.json');
 import { customHttpProvider } from "./config";
-import { store } from "../store";
 
 // require('dotenv').config();
-const INFURA_URL_TESTNET = process.env.VUE_APP_INFURA_URL_TESTNET;
+// const INFURA_URL_TESTNET = process.env.VUE_APP_INFURA_URL_TESTNET;
 const WALLET_ADDRESS = process.env.VUE_APP_WALLET_ADDRESS;
 const WALLET_SECRET = process.env.VUE_APP_WALLET_SECRET;
-
+const INFURA_URL_POLYGON_MAINNET = process.env.VUE_APP_INFURA_POLYGON_URL;
 // Blockchain provider
 const provider = customHttpProvider; // polygon
+// const provider = new ethers.providers.JsonRpcProvider(INFURA_URL_POLYGON_MAINNET); // polygon
 // Wrapped ETH to Uniswap Pool Address
 // const poolAddress = "0x4D7C363DED4B3b4e1F954494d2Bc3955e49699cC" // UNI/WETH
 const poolAddress = "0xA374094527e1673A86dE625aa59517c5dE346d32" // MATIC / USDC
@@ -44,7 +44,7 @@ export async function performSwap(flowRate) {
 
   // Query pool to grab immutable variables from it
   const immutables = await getPoolImmutables(poolContract);
-
+    console.log(immutables);
   // Query pool to grab mutable variables from it, such as the current price
   // const state = await getPoolState(poolContract);
 
@@ -60,7 +60,7 @@ export async function performSwap(flowRate) {
     provider
   );
 
-  // const inputAmount = 0.001;
+  // const inputAmount = 0.1;
   const inputAmount = flowRate * 10;
   // Convert to amount that Uniswap expects, first 18 numbers represents decimals.
   // Shift decimal over 18 times
@@ -70,9 +70,10 @@ export async function performSwap(flowRate) {
     decimals0
   );
 
+  console.log(amountIn);
+
   // Contract on wrapped ether to give Uniswap permission to access ether in our wallet
-  // TODO: Multiply by 100000 to give Uniswap unlimited access to ether in wallet, ONLY FOR TESTNET
-  const approvalAmount = (amountIn * 100000).toString();
+  const approvalAmount = (amountIn).toString();
   // The token contract that will approve our spending amount with Uniswap API
   const tokenContract0 = new ethers.Contract(
     address0,
@@ -80,12 +81,12 @@ export async function performSwap(flowRate) {
     provider
   );
 
-  await tokenContract0.connect(connectedWallet).approve(
-    swapRouterAddress,
-    approvalAmount
-  );
+  // await tokenContract0.connect(connectedWallet).approve(
+  //   swapRouterAddress,
+  //   approvalAmount
+  // );
 
-  // Objet that represents details regarding our transaction
+  // Object that represents details regarding our transaction
   const params = {
     tokenIn: immutables.token1,
     tokenOut: immutables.token0,
